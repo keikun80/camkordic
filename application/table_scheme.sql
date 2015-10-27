@@ -18,3 +18,11 @@ create table tbl_invent_voucher (
     isOpen enum('y','n') default 'n',
     isDel enum ('y','n') default 'n'
 );
+
+create table tbl_invent_user (
+  usrKey serial,
+  usrName varchar(255) not null,
+  usrEmail varchar(255) not null,
+  usrPass varchar(255) not null,
+  isDel enum('y','n') default 'n'
+)

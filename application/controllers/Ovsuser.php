@@ -39,7 +39,7 @@ class Ovsuser extends CI_Controller {
       $vars = array ('usrName' => $this->input->post('usrName'),
                      'usrEmail' => $this->input->post('usrEmail'),
                     'usrPass' => $this->input->post('usrPass'),
-                    'isActive' => 'n');
+                    'isDel' => 'n');
       $isValid = FALSE;
       //Password check
       $this->load->model('ovsmodel');
