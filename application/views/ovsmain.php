@@ -12,7 +12,7 @@
                 <input type="checkbox" value="remember-me"> Remember me
               </label>
             </div>
-            <a href="index.php/ovsmain/enroll">Join us</a>
+            <a href="<?php echo $actionJoinPath;?>">Join us</a>
             <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
           </form>
 

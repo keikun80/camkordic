@@ -1,41 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Bootstrap 101 Template</title>
-
-    <!-- Bootstrap -->
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/css/signin.css" rel="stylesheet">
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="assets/js/jquery-1.11.3.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="assets/js/bootstrap.min.js"></script>
 
     <div class="container">
-
-          <form class="form-signin">
-            <h2 class="form-signin-heading">Please Enter User information</h2>
+      <form class="form-signin" action="<?php echo $actionJoinPath;?>" method="post">
+        <h2 class="form-signin-heading">Enter User information</h2>
+          <label for="inputName" class="sr-only">User name</label>
+            <input id="usrName" name="usrName" type="text" id="inputName" class="form-control" placeholder="User name" required autofocus>
             <label for="inputEmail" class="sr-only">Email address</label>
-            <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+            <span id="emailFocus"><input name="usrEmail" type="email" id="usrEmail" class="form-control" placeholder="Email address" required autofocus></span>
+
             <label for="inputPassword" class="sr-only">Password</label>
-            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-            <label for="inputPassword2" class="sr-only">Repeat Password</label>
-            <input type="password" id="inputPasswordw" class="form-control" placeholder="Password" required>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+            <input name="usrPass" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+
+            <label for="inputPasswordw" class="sr-only">Repeat Password</label>
+            <input name="usrPass2" type="password" id="inputPasswordw" class="form-control" placeholder="Repeat Password" required>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" id="submit">Sign in</button>
           </form>
 
         </div> <!-- /container -->
-  </body>
-</html>
+
+<script>
+$(document).ready ( function () {
+
+  $('#emailFocus').focusout( function() {
+    $('#checkedEmail').hide();
+    if($('#usrEmail').val().match(/@/)) {
+      var fncCheck = $.post("<?php echo $actionEmailCheck;?>", {'usrEmail': $('#usrEmail').val()});
+      fncCheck.done(function (data){
+          if(data >= 1){
+              $('#usrEmail').after('<span id="checkedEmail" class=\"error\"> This email is already join.</span>');
+          } else {
+              $('#usrEmail').after('<span id="checkedEmail" class=\"notice\"> This email can use.</span>');
+          }
+      });
+
+      fncCheck.fail(function (data){
+        alert('fail')
+      });
+    }
+
+  });
+
+  $('#submit').click( function () {
+    $('#errorTextPw').hide();
+    var hasError = false;
+    var opass = $('#inputPassword').val();
+    var vpass = $('#inputPasswordw').val();
+    if(opass === vpass) {
+      hasError = true;
+    } else if (opass !== vpass) {
+      $('#inputPassword').addClass('error');
+      $('#inputPasswordw').addClass('error').after("<span id=\"errorTextPw\" class=\"errorText\">Password is not match</span> ");
+      hasError = false;
+    } else {
+        hasError = false;
+    }
+    return hasError;
+  });
+  $('input[type=password]').click(function (){
+      $(this).val('');
+      $(this).removeClass('error');
+      $('#errorTextPw').hide();
+  });
+});
+</script>

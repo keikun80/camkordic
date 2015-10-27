@@ -16,8 +16,10 @@ class Layout {
   {
     $this->addInclude("assets/css/bootstrap.min.css");
     $this->addInclude("assets/js/jquery-1.11.3.min.js");
+    $this->addInclude("assets/js/jquery-ui/jquery-ui.min.js");
     $this->addInclude("assets/js/bootstrap.min.js");
     $this->addInclude("assets/css/signin.css");
+    $this->addInclude("assets/js/jquery-ui/jquery-ui.min.css");
 
     if($this->title_for_page !== NULL)
     {
