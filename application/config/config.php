@@ -17,7 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | environments.
 |
 */
-$config['base_url'] = 'http://localhost/devstore/';
+$config['base_url'] = 'http://54.179.133.226/devstore/';
 
 /*
 |--------------------------------------------------------------------------
