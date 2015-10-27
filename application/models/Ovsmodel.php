@@ -1,7 +1,7 @@
 <?php
 defined ('BASEPATH') or exit ('No direct access script allow');
 
-class ovsmodel extends CI_Model {
+class Ovsmodel extends CI_Model {
   public function __construct()
   {
     parent::__construct();

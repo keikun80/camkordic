@@ -1,7 +1,7 @@
 <?php
 defined ('BASEPATH') or exit ('no direct script access allowed');
 
-class ovsuser extends CI_Controller {
+class Ovsuser extends CI_Controller {
 
   public function  index()
   {

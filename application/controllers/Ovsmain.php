@@ -1,15 +1,16 @@
 <?php
 defined ('BASEPATH') or exit('No direct access script allow');
 
-class ovsmain extends CI_Controller {
+class Ovsmain extends CI_Controller {
 
   public function index($offset=0)
-  {
+  { 
     $this->ovslist($offset);
   }
 
   public function ovslist($offset=0)
-  {
+  { 
+	echo 'a';
     $pageArticleLimit = 20;
     /*   todo
      1. make list
