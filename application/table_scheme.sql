@@ -25,4 +25,21 @@ create table tbl_invent_user (
   usrEmail varchar(255) not null,
   usrPass varchar(255) not null,
   isDel enum('y','n') default 'n'
-)
+);
+
+create table tbl_code_tour (
+  torKey serial,
+  orgKey int not null,
+  torName varchar(255) not null,
+  torDesc text not null,
+  isDel enum('y', 'n') default 'n'
+);
+
+create table tbl_code_org (
+    orgKey serial,
+    orgName varchar(255) not null,
+    orgPerson varchar(255) not null,
+    orgTaxCode varchar(255),
+    orgMobile varchar(255),
+    isDel enum('y','n') default 'n'
+);

@@ -8,7 +8,7 @@ class Ovsuser extends CI_Controller {
       $actionJoinPath = $this->config->item('base_url').'index.php/'.get_class($this).'/enroll';
       $vars = array ('actionJoinPath' => $actionJoinPath);
       $this->layout->setTitle("test");
-      $this->layout->view('ovsmain', $vars);
+      $this->layout->view('ovsmain', $vars ,'default_sign');
   }
 
   public function enroll()
@@ -19,7 +19,7 @@ class Ovsuser extends CI_Controller {
     $viewVars = array('actionJoinPath' => $actionJoinPath
                       ,'actionEmailCheck' => $actionEmailCheck);
     $this->layout->setTitle("test");
-    $this->layout->view("ovsenroll",$viewVars);
+    $this->layout->view("ovsenroll",$viewVars, 'default_sign');
   }
 
   public function checkUser()

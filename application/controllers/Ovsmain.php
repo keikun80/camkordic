@@ -39,7 +39,7 @@ class Ovsmain extends CI_Controller {
 
     $this->pagination->initialize($config);
 
-    $condition = array();
+    $condition = array('isDel'=>'n' );
     $this->load->model('ovsmodel');
     $result = $this->ovsmodel->ovslist($pageArticleLimit, $offset, $condition);
     $vars = array ('result'=> $result,
