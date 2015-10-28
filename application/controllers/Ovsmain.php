@@ -4,13 +4,12 @@ defined ('BASEPATH') or exit('No direct access script allow');
 class Ovsmain extends CI_Controller {
 
   public function index($offset=0)
-  { 
+  {
     $this->ovslist($offset);
   }
 
   public function ovslist($offset=0)
-  { 
-	echo 'a';
+  {
     $pageArticleLimit = 20;
     /*   todo
      1. make list
@@ -44,12 +43,13 @@ class Ovsmain extends CI_Controller {
     $this->load->model('ovsmodel');
     $result = $this->ovsmodel->ovslist($pageArticleLimit, $offset, $condition);
     $vars = array ('result'=> $result,
+                   'listurl' => $_SERVER['PHP_SELF'],
                    'linkurl' => $this->config->item('base_url').'index.php/'.get_class($this).'/ovsedit');
     $this->layout->setTitle("OVS MANAGEMENT - LIST");
     $this->layout->view('ovslist',$vars);
   }
 
-  public function ovsedit($vocKey)
+  public function ovsedit($vocKey=0)
   {
     if($vocKey > 0 )
     {
@@ -58,7 +58,6 @@ class Ovsmain extends CI_Controller {
       $vars['buttonDesc'] = 'UPDATE';
 
       $vars['result'] = $this->db->get_where('tbl_invent_voucher', $condition);
-
       $this->layout->setTitle("OVS MANAGEMENT - EDIT");
       $this->layout->view('ovsedit',$vars);
     } else {
@@ -87,28 +86,35 @@ class Ovsmain extends CI_Controller {
           none vocSeq => insert process
        2.
     */
+    $vocKey = $this->input->post('vocKey');
+    $refer = $this->input->post('refer');
+
     $cusName = $this->input->post('cusName');
     $cusEmail = $this->input->post('cusEmail');
     $cusMobile = $this->input->post('cusMobile');
+    //$departDate = date_create_from_format('yy-mm-dd', $this->input->post('departDate'));
+    //$departDate = date_format($departDate, 'Y-m-d');
+    $departDate = $this->input->post('departDate');
 
-    $departDate = date_create_from_format('j M, y', $this->input->post('departDate'));
-    $departDate = date_format($departDate, 'Y-m-d');
+    //$returnDate = date_create_from_format('yy-mm-dd', $this->input->post('returnDate'));
+    //$returnDate = date_format($returnDate, 'Y-m-d');
+    $returnDate = $this->input->post('returnDate');
 
-    $returnDate = date_create_from_format('j M, y', $this->input->post('returnDate'));
-    $returnDate = date_format($returnDate, 'Y-m-d');
+    //$bookingDate = date_create_from_format('yy-mm-dd', $this->input->post('bookingDate'));
+    //$bookingDate = date_format($bookingDate, 'Y-m-d');
+    $bookingDate = $this->input->post('bookingDate');
 
-    $bookingDate = date_create_from_format('j M, y', $this->input->post('bookingDate'));
-    $bookingDate = date_format($bookingDate, 'Y-m-d');
+    //$paymentDate = date_create_from_format('yy-mm-dd', $this->input->post('paymentDate'));
+    //$paymentDate = date_format($paymentDate, 'Y-m-d');
+    $paymentDate = $this->input->post('paymentDate');
 
-    $paymentDate = date_create_from_format('j M, y', $this->input->post('paymentDate'));
-    $paymentDate = date_format($paymentDate, 'Y-m-d');
-
-    $openDate = date_create_from_format('j M, y', $this->input->post('openDate'));
-    $openDate = date_format($openDate, 'Y-m-d');
-
+    //$openDate = date_create_from_format('yy-mm-dd', $this->input->post('openDate'));
+    //$openDate = date_format($openDate, 'Y-m-d');
+    $openDate = $this->input->post('openDate');
+    ;
     $torKey = $this->input->post('torKey');
     $orgKey = $this->input->post('orgKey');
-    $isPayment = $this->input->post('isPayment');
+    $isPaid = $this->input->post('isPaid');
     $isOpen = $this->input->post('isOpen');
 
 
@@ -122,17 +128,31 @@ class Ovsmain extends CI_Controller {
                      'openDate' => $openDate,
                      'torKey' => $torKey,
                      'orgKey' => $orgKey,
-                     'isPayment' => $isPaid,
+                     'isPaid' => $isPaid,
                      'isOpen'=> $isOpen);
 
-    $this->db->insert('tbl_invent_voucher', $updVars);
+    if($vocKey > 0)
+    {
+        $this->db->where('vocKey',$vocKey);
+        $this->db->update('tbl_invent_voucher',$updVars);
+    } else {
+      $this->db->insert('tbl_invent_voucher', $updVars);
+    }
+    if($refer == '')
+    {
+      $listUrl = $this->config->item('base_url').'index.php/'.get_class($this).'/ovslist';
+      header('location:'.$listUrl);
+    } else {
+      header('location:'.$refer);
+    }
   }
+
   public function dummydata($count=1000)
   {
 
     for($i=0; $i<$count; $i++)
     {
-      $data = array('cusName'=>'test#',
+$data = array('cusName'=>'test#',
             'cusEmail'=> 'test#@gmail.com',
             'cusMobile' => '123#098764',
             'torKey' => '###',

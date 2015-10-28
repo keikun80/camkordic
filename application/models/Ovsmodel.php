@@ -27,7 +27,8 @@ class Ovsmodel extends CI_Model {
           $this->db->where('tbl_invent_voucher', $condition);
       }
       if ($offset > 0) { $this->db->limit($limit, $offset); }
-      else { $this->db->limit($limit);}
+      else { $this->db->limit($limit); }
+      $this->db->order_by('vocKey', 'DESC');
       return $this->db->get('tbl_invent_voucher');
   }
 

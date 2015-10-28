@@ -51,7 +51,7 @@
               echo '<td>'.date('Y-m-d', strtotime($row->departDate)).'</td>';
               echo '<td>'.date('Y-m-d', strtotime($row->bookingDate)).'</td>';
               echo '<td>'.date('Y-m-d', strtotime($row->paymentDate)).'</td>';
-              echo '<td>'.$row->cusName.'</td>';
+              echo '<td><a href="'.$linkurl.'/'.$row->vocKey.'">'.$row->cusName.'</a></td>';
               echo '<td>'.$row->cusMobile.'</td>';
               echo '<td>'.$row->torKey.'</td>';
               echo '<td>'.$row->orgKey.'</td>';
