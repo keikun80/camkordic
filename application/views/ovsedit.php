@@ -1,27 +1,31 @@
 <?php
 // Edit data implement
 $htmlItems = array ('refer' => 'hidden|refer'
-                   ,'vocKey' => 'hidden|vocKey'
-                   ,'cusName' => 'text|cusName'
-                   ,'cusEmail' =>'text|cusEmail'
-                   ,'cusMobile' =>'text|cusMobile'
+                   ,'seq' => 'hidden|seq'
+                   ,'cname' => 'text|cname'
+                   ,'cemail' =>'text|cemail'
+                   ,'cmobile' =>'text|cmobile'
                    ,'departDate' =>'text|departDate'
                    ,'returnDate' =>'text|returnDate'
                    ,'paymentDate' =>'text|paymentDate'
-                   ,'bookingDate' =>'text|bookingDate'
+                   ,'regDate' =>'text|regDate'
                    ,'openDate' => 'text|openDate'
-                   ,'torKey' => 'select|tour'
-                   ,'orgKey' => 'select|org'
-                   ,'amount' => 'text|amount'
-                   ,'numofpeo' =>'text|nop'
+                   ,'trcode' => 'select|trcode'
+                   ,'orgname' => 'select|orgname'
+                   ,'amount' => 'text|amount' 
+		           ,'totamount' => 'text|totamount'  
+		           ,'single_charge' => 'text|single_charge' 
+				   ,'child_ratio' => 'text|child_ratio'
+                   ,'nopadult' =>'text|nopadult'
+                   ,'nopchild' =>'text|nopchild'
                    ,'isPaid' => 'select|isPaid'
                    ,'isOpen' => 'select|isOpen');
 
 /* initialize vars */
-$vocKey = NULL;
-$cusName = NULL;
-$cusEmail = NULL;
-$cusMobile = NULL;
+$seq = NULL;
+$cname = NULL;
+$cemail = NULL;
+$cmobile = NULL;
 $departDate = date_parse_from_format('Y-m-d', date('Y-m-d'));
 $strDepartDate = $departDate['year'].'-'.$departDate['month'].'-'.$departDate['day'];
 
@@ -31,16 +35,18 @@ $strReturnDate = $returnDate['year'].'-'.$returnDate['month'].'-'.$returnDate['d
 $paymentDate = date_parse_from_format('Y-m-d', date('Y-m-d'));
 $strPaymentDate = $paymentDate['year'].'-'.$paymentDate['month'].'-'.$paymentDate['day'];
 
-$bookingDate = date_parse_from_format('Y-m-d',date('Y-m-d'));
-$strBookingDate= $bookingDate['year'].'-'.$bookingDate['month'].'-'.$bookingDate['day'];
+$regDate = date_parse_from_format('Y-m-d',date('Y-m-d'));
+$strRegDate= $regDate['year'].'-'.$regDate['month'].'-'.$regDate['day'];
 
 $openDate = date_parse_from_format('Y-m-d', date('Y-m-d'));
 $strOpenDate = $openDate['year'].'-'.$openDate['month'].'-'.$openDate['day'];
 
-$torKey = NULL;
-$orgKey = NULL;
-$amount = NULL;
-$nop = NULL;
+$trcode = NULL;
+$orgname = NULL;
+$amount = NULL; 
+$totamount = NULL;
+$nopadult = NULL;
+$nopchild = NULL;
 $isPaid = array ('y|PAID|','n|UN-PAID|selected' );
 $isOpen = array ('y|OPEN|','n|CLOSE|selected' );
 
@@ -49,10 +55,10 @@ $refer= (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '');
 
 if(isset($result))
 {
-  $vocKey = $result->row()->vocKey;
-  $cusName = $result->row()->cusName;
-  $cusEmail = $result->row()->cusEmail;
-  $cusMobile = $result->row()->cusMobile;
+  $seq= $result->row()->seq;
+  $cname = $result->row()->cname;
+  $cemail = $result->row()->cemail;
+  $cmobile = $result->row()->cmobile;
 
   $departDate = date_parse_from_format('Y-m-d', $result->row()->departDate);
   $strDepartDate = $departDate['year'].'-'.$departDate['month'].'-'.$departDate['day'];
@@ -63,16 +69,19 @@ if(isset($result))
   $paymentDate = date_parse_from_format('Y-m-d', $result->row()->paymentDate);
   $strPaymentDate = $paymentDate['year'].'-'.$paymentDate['month'].'-'.$paymentDate['day'];
 
-  $bookingDate = date_parse_from_format('Y-m-d', $result->row()->bookingDate);
-  $strBookingDate= $bookingDate['year'].'-'.$bookingDate['month'].'-'.$bookingDate['day'];
+  $bookingDate = date_parse_from_format('Y-m-d', $result->row()->regDate);
+  $strBookingDate= $regDate['year'].'-'.$regDate['month'].'-'.$regDate['day'];
 
   $openDate = date_parse_from_format('Y-m-d', $result->row()->openDate);
   $strOpenDate = $openDate['year'].'-'.$openDate['month'].'-'.$openDate['day'];
 
-  $torKey = $result->row()->torKey;
-  $orgKey = $result->row()->orgKey;
+  $trcode = $result->row()->trcode;
+  $orgname = $result->row()->orgname;
   $amount = $result->row()->amount;
-  $nop = $result->row()->numofpeo;
+  $totamount = $result->row()->totamount;
+  $nopadult = $result->row()->nopadult;
+  $nopchild = $result->row()->nopchild; 
+  $child_ratio = $result->row()->child_ratio;
   $isPaid = array('y|PAID|', 'n|UN-PAID|selected');
   $isOpen = array('y|OPEN|', 'n|CLOSE|selected');
 
@@ -151,22 +160,22 @@ function createSelectBox($item, $itemSet, $required = TRUE, $disable = FALSE)
     </div>
     <div class="panel-body">
       <form action="<?php echo $actionUpdUrl;?>" method="post">
-            <?php echo createTextItem('vocKey', $vocKey, $htmlItems, TRUE, FALSE); ?>
+            <?php echo createTextItem('seq', $seq, $htmlItems, TRUE, FALSE); ?>
             <?php echo createTextItem('refer', $refer, $htmlItems, TRUE, FALSE); ?>
         <table class="table">
           <col width="15%" />
           <col width="85%" />
           <tr>
             <td>Customer Name</td>
-            <td><?php echo createTextItem('cusName', $cusName, $htmlItems, TRUE, FALSE); ?></td>
+            <td><?php echo createTextItem('cname', $cname, $htmlItems, TRUE, FALSE); ?></td>
           </tr>
           <tr>
             <td>Customer Email</td>
-            <td><?php echo createTextItem('cusEmail', $cusEmail, $htmlItems, TRUE, FALSE); ?></td>
+            <td><?php echo createTextItem('cemail', $cemail, $htmlItems, TRUE, FALSE); ?></td>
           </tr>
           <tr>
             <td>Customer Mobile</td>
-            <td><?php echo createTextItem('cusMobile', $cusMobile, $htmlItems, TRUE, FALSE); ?></td>
+            <td><?php echo createTextItem('cmobile', $cmobile, $htmlItems, TRUE, FALSE); ?></td>
           </tr>
           <tr>
             <td>Departure Date</td>
@@ -182,7 +191,7 @@ function createSelectBox($item, $itemSet, $required = TRUE, $disable = FALSE)
           </tr>
           <tr>
             <td>Booking Date</td>
-            <td><?php echo createTextItem('bookingDate', $strBookingDate, $htmlItems, TRUE, FALSE); ?></td>
+            <td><?php echo createTextItem('regDate', $strBookingDate, $htmlItems, TRUE, FALSE); ?></td>
           </tr>
           <tr>
             <td>Open Date</td>
@@ -190,13 +199,13 @@ function createSelectBox($item, $itemSet, $required = TRUE, $disable = FALSE)
           </tr>
           <tr>
             <td>Tour Service</td>
-            <td><input type="text" name="torKey" id="torKey" required />
+            <td><input type="text" name="trcode" id="trcode" value="<?php echo $trcode; ?>" required /> 
                 <button id="torsearch"> Find Tour </button>
             </td>
           </tr>
           <tr>
             <td>Organiztion</td>
-            <td><input type="text" name="orgKey" id="orgKey" required />
+            <td><input type="text" name="orgname" id="orgname" value="<?php echo $orgname;?>" required />
                 <button id="torsearch"> Find Organization </button>
               </td>
           </tr>
@@ -205,8 +214,14 @@ function createSelectBox($item, $itemSet, $required = TRUE, $disable = FALSE)
             <td><?php echo createTextItem('amount', $amount, $htmlItems, TRUE, FALSE); ?></td>
           </tr>
           <tr>
+            <td>Total Amount</td>
+            <td><?php echo createTextItem('totamount', $totamount, $htmlItems, TRUE, FALSE); ?></td>
+          </tr>
+          <tr>
             <td>Number of People</td>
-            <td><?php echo createTextItem('numofpeo', $nop, $htmlItems, TRUE, FALSE); ?></td>
+            <td>성인 : <?php echo createTextItem('nopadult', $nopadult, $htmlItems, TRUE, FALSE); ?>
+                                     소아 :<?php echo createTextItem('nopchild', $nopchild, $htmlItems, TRUE, FALSE); ?>
+                (할인율 : <?php echo $child_ratio; ?>%) </td>
           </tr>
           <tr>
             <td>Payment</td>

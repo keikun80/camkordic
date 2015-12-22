@@ -46,15 +46,15 @@
           foreach ($result->result() as $row)
           {
             echo '<tr>';
-              echo '<td><a href="'.$linkurl.'/'.$row->vocKey.'">'.$row->vocKey.'</a></td>';
+              echo '<td><a href="'.$linkurl.'/'.$row->seq.'">'.$row->seq.'</a></td>';
               echo '<td>'. ($row->isOpen == 'y' ? 'open' : 'close').'</td>';
               echo '<td>'.date('Y-m-d', strtotime($row->departDate)).'</td>';
-              echo '<td>'.date('Y-m-d', strtotime($row->bookingDate)).'</td>';
+              echo '<td>'.date('Y-m-d', strtotime($row->regDate)).'</td>';
               echo '<td>'.date('Y-m-d', strtotime($row->paymentDate)).'</td>';
-              echo '<td><a href="'.$linkurl.'/'.$row->vocKey.'">'.$row->cusName.'</a></td>';
-              echo '<td>'.$row->cusMobile.'</td>';
-              echo '<td>'.$row->torKey.'</td>';
-              echo '<td>'.$row->orgKey.'</td>';
+              echo '<td><a href="'.$linkurl.'/'.$row->seq.'">'.$row->cname.'</a></td>';
+              echo '<td>'.$row->cmobile.'</td>';
+              echo '<td>'.$row->trcode.'</td>';
+              echo '<td>'.$row->orgcode.'</td>';
               echo '<td>'. ($row->isPaid == 'y' ? 'PAID' : 'UN-PAID').'</td>';
             echo '</tr>';
           }

@@ -28,8 +28,8 @@ class Ovsmodel extends CI_Model {
       }
       if ($offset > 0) { $this->db->limit($limit, $offset); }
       else { $this->db->limit($limit); }
-      $this->db->order_by('vocKey', 'DESC');
-      return $this->db->get('tbl_invent_voucher');
+      $this->db->order_by('seq', 'DESC');
+      return $this->db->get('wp_tb_voucher_list');
   }
 
 

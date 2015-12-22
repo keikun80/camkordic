@@ -18,7 +18,7 @@ class Ovsmain extends CI_Controller {
      4. multi item delete
     */
     $config['base_url'] = $this->config->item('base_url').'index.php/'.get_class($this).'/ovslist';
-    $config['total_rows']= $this->db->count_all('tbl_invent_voucher', array('isDel'=>'n'));
+    $config['total_rows']= $this->db->count_all('wp_tb_voucher_list', array('isDel'=>'n'));
     $config['per_page'] = $pageArticleLimit;
     $config['num_links'] = 5;
     $config['full_tag_open'] = '<nav><ul class="pagination">';
@@ -49,15 +49,15 @@ class Ovsmain extends CI_Controller {
     $this->layout->view('ovslist',$vars);
   }
 
-  public function ovsedit($vocKey=0)
+  public function ovsedit($seq=0)
   {
-    if($vocKey > 0 )
+    if($seq > 0 )
     {
-      $condition= array('vocKey'=> $vocKey);
+      $condition= array('seq'=> $seq);
       $vars['actionUpdUrl'] = $this->config->item('base_url').'index.php/'.get_class($this).'/ovsUpdvoucher';
       $vars['buttonDesc'] = 'UPDATE';
 
-      $vars['result'] = $this->db->get_where('tbl_invent_voucher', $condition);
+      $vars['result'] = $this->db->get_where('wp_tb_voucher_list', $condition);
       $this->layout->setTitle("OVS MANAGEMENT - EDIT");
       $this->layout->view('ovsedit',$vars);
     } else {
@@ -86,57 +86,47 @@ class Ovsmain extends CI_Controller {
           none vocSeq => insert process
        2.
     */
-    $vocKey = $this->input->post('vocKey');
+    $seq = $this->input->post('seq');
     $refer = $this->input->post('refer');
 
-    $cusName = $this->input->post('cusName');
-    $cusEmail = $this->input->post('cusEmail');
-    $cusMobile = $this->input->post('cusMobile');
-    //$departDate = date_create_from_format('yy-mm-dd', $this->input->post('departDate'));
-    //$departDate = date_format($departDate, 'Y-m-d');
+    $cname = $this->input->post('cname');
+    $cemail = $this->input->post('cemail');
+    $cmobile = $this->input->post('cmobile');
     $departDate = $this->input->post('departDate');
 
-    //$returnDate = date_create_from_format('yy-mm-dd', $this->input->post('returnDate'));
-    //$returnDate = date_format($returnDate, 'Y-m-d');
     $returnDate = $this->input->post('returnDate');
 
-    //$bookingDate = date_create_from_format('yy-mm-dd', $this->input->post('bookingDate'));
-    //$bookingDate = date_format($bookingDate, 'Y-m-d');
-    $bookingDate = $this->input->post('bookingDate');
+    $regDate = $this->input->post('regDate');
 
-    //$paymentDate = date_create_from_format('yy-mm-dd', $this->input->post('paymentDate'));
-    //$paymentDate = date_format($paymentDate, 'Y-m-d');
     $paymentDate = $this->input->post('paymentDate');
-
-    //$openDate = date_create_from_format('yy-mm-dd', $this->input->post('openDate'));
-    //$openDate = date_format($openDate, 'Y-m-d');
+	$nopadult = $this->input->post('nopadult');
+	$nopchild = $this->input->post('nopchilde');
     $openDate = $this->input->post('openDate');
-    ;
-    $torKey = $this->input->post('torKey');
-    $orgKey = $this->input->post('orgKey');
+    $trcode = $this->input->post('trcode');
+    $orgname = $this->input->post('orgname');
     $isPaid = $this->input->post('isPaid');
     $isOpen = $this->input->post('isOpen');
 
 
-    $updVars = array('cusName' => $cusName,
-                     'cusEmail'=> $cusEmail,
-                     'cusMobile' => $cusMobile,
+    $updVars = array('cname' => $cname,
+                     'cemail'=> $cemail,
+                     'cmobile' => $cmobile,
                      'departDate' => $departDate,
                      'returnDate' => $returnDate,
-                     'bookingDate' => $bookingDate,
+                     'regDate' => $regDate,
                      'paymentDate' => $paymentDate,
-                     'openDate' => $openDate,
-                     'torKey' => $torKey,
-                     'orgKey' => $orgKey,
-                     'isPaid' => $isPaid,
+                     'openDate' => $openDate, 
+    				 'trcode' => $trcode, 
+    		         'orgname' => $orgname, 
+    		         'isPaid' => $isPaid,
                      'isOpen'=> $isOpen);
 
     if($vocKey > 0)
     {
-        $this->db->where('vocKey',$vocKey);
-        $this->db->update('tbl_invent_voucher',$updVars);
+        $this->db->where('seq',$seq);
+        $this->db->update('wp_tb_voucher_list',$updVars);
     } else {
-      $this->db->insert('tbl_invent_voucher', $updVars);
+      $this->db->insert('wp_tb_voucher_list', $updVars);
     }
     if($refer == '')
     {
@@ -152,34 +142,34 @@ class Ovsmain extends CI_Controller {
 
     for($i=0; $i<$count; $i++)
     {
-$data = array('cusName'=>'test#',
-            'cusEmail'=> 'test#@gmail.com',
-            'cusMobile' => '123#098764',
-            'torKey' => '###',
-            'orgKey' => '###',
+$data = array('cname'=>'test#',
+            'cemail'=> 'test#@gmail.com',
+            'cmobile' => '123#098764',
+            'trcode' => '###',
+            'orgname' => '###',
             'amount' => '########',
-            'numofpeo' => '##',
-            'vocSer' =>'#',
+            'nopad' => '##',
+            'nopch' =>'#',
             'departDate' => '2015-10-31',
             'returnDate'=> '2015-11-01',
             'paymentDate' => '2015-10-29',
             'openDate' => '2015-10-30',
-            'bookingDate'=> '2015-10-29',
+            'regDate'=> '2015-10-29',
             'isPaid' => 'y',
             'isOpen' =>'n',
             'isDel' => 'n',
           );
 
-        $data['cusName'] = preg_replace('/#/', $i, $data['cusName']);
-        $data['cusEmail'] = preg_replace('/#/', $i, $data['cusEmail']);
-        $data['cusMobile'] = preg_replace('/#/', $i, $data['cusMobile']);
-        $data['torKey'] = preg_replace('/###/', rand(100,200), $data['torKey']);
-        $data['orgKey'] = preg_replace('/###/', rand(100,200), $data['orgKey']);
+        $data['cname'] = preg_replace('/#/', $i, $data['cusName']);
+        $data['cemail'] = preg_replace('/#/', $i, $data['cusEmail']);
+        $data['cmobile'] = preg_replace('/#/', $i, $data['cusMobile']);
+        $data['trcode'] = preg_replace('/###/', rand(100,200), $data['torKey']);
+        $data['orgname'] = preg_replace('/###/', rand(100,200), $data['orgKey']);
         $data['amount'] = preg_replace('/########/', rand(10000000,20000000), $data['amount']);
-        $data['numofpeo'] = preg_replace('/##/', rand(1,99), $data['numofpeo']);
-        $data['vocSer'] = preg_replace('/#/', '2015'.date('m').rand(1,9999), $data['vocSer']);
+        $data['nopad'] = preg_replace('/##/', rand(1,99), $data['numofpeo']);
+        $data['cvos'] = preg_replace('/#/', '2015'.date('m').rand(1,9999), $data['cvos']);
       print_r($data);
-      $this->db->insert('tbl_invent_voucher', $data);
+      $this->db->insert('wp_tb_voucher_list', $data);
     }
   }
 }
