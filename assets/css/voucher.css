@@ -1,0 +1,245 @@
+ .voucher_body {
+      width: 800px;
+      height: 550px;
+      margin: 0px;
+    }
+   /* body {
+      transform: perspective(1400px) matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+      transform-style: preserve-3d;
+      background-color: transparent;
+    } 
+    */
+    .gwd-p-10g2 {
+      position: absolute;
+      font-family: 'Times New Roman';
+      color: rgb(0, 0, 0);
+      transform-origin: 61.1094px 27.5px 0px;
+      transform-style: preserve-3d;
+      width: 128px;
+      height: 44px;
+      left: 40px;
+      top: 57px;
+    }
+    .gwd-p-1vai {
+      position: absolute;
+      font-family: 'Times New Roman';
+      text-align: left;
+      color: rgb(0, 0, 0);
+      left: 718px;
+      top: 57px;
+    }
+    .gwd-p-cczf {
+      position: absolute;
+      font-family: 'Times New Roman';
+      text-align: left;
+      color: rgb(0, 0, 0);
+      font-size: 32px;
+      left: 320px;
+      top: 83px;
+    }
+    .gwd-p-4dku {
+      position: absolute;
+      font-family: 'Times New Roman';
+      color: rgb(0, 0, 0);
+      left: 360px;
+      top: 125px;
+    }
+    .gwd-p-wj6z {
+      position: absolute;
+      font-family: 'Times New Roman';
+      color: rgb(0, 0, 0);
+      transform-style: preserve-3d;
+      width: 124px;
+      height: 18px;
+      transform-origin: -267.891px -70.5px 0px;
+      left: 390px;
+      top: 125px;
+    }
+    .gwd-p-azle {
+      position: absolute;
+      font-family: 'Times New Roman';
+      color: rgb(0, 0, 0);
+      left: 587px;
+      top: 125px;
+    }
+    .gwd-p-1e68 {
+      position: absolute;
+      font-family: 'Times New Roman';
+      color: rgb(0, 0, 0);
+      transform-style: preserve-3d;
+      width: 115px;
+      height: 18px;
+      transform-origin: 67px -88.5px 0px;
+      left: 685px;
+      top: 125px;
+    }
+    .gwd-p-2zzh {
+      position: absolute;
+      font-family: 'Times New Roman';
+      color: rgb(0, 0, 0);
+      transform-style: preserve-3d;
+      width: 200px;
+      height: 20px;
+      transform-origin: 627px -157.5px 0px;
+      left: 100px;
+      top: 186px;
+    }
+    .gwd-p-pzcs {
+      position: absolute;
+      font-family: 'Times New Roman';
+      text-align: left;
+      color: rgb(0, 0, 0);
+      width: 200px;
+      height: 20px;
+      left: 100px;
+      top: 223px;
+    }
+    .gwd-p-d3i0 {
+      position: absolute;
+      font-family: 'Times New Roman';
+      text-align: left;
+      color: rgb(0, 0, 0);
+      left: 100px;
+      top: 262px;
+    }
+    .gwd-p-8fbn {
+      position: absolute;
+      font-family: 'Times New Roman';
+      text-align: left;
+      color: rgb(0, 0, 0);
+      transform-style: preserve-3d;
+      left: 100px;
+      top: 335px;
+      width: 200px;
+      height: 20px;
+      transform-origin: 627px -306.5px 0px;
+    }
+    .gwd-p-pn4n {
+      position: absolute;
+      font-family: 'Times New Roman';
+      text-align: left;
+      color: rgb(0, 0, 0);
+      transform-origin: 627px -244.5px 0px;
+      transform-style: preserve-3d;
+      width: 200px;
+      height: 20px;
+      left: 100px;
+      top: 297px;
+    }
+    .gwd-p-r05n {
+      position: absolute;
+      font-family: 'Times New Roman';
+      text-align: left;
+      color: rgb(0, 0, 0);
+      width: 200px;
+      height: 20px;
+      left: 100px;
+      top: 373px;
+    }
+    .gwd-p-1y0u {
+      position: absolute;
+      left: 300px;
+      top: 186px;
+      font-family: 'Times New Roman';
+      text-align: left;
+      color: rgb(0, 0, 0);
+    }
+    .gwd-p-1ve2 {
+      position: absolute;
+      left: 300px;
+      top: 223px;
+      font-family: 'Times New Roman';
+      color: rgb(0, 0, 0);
+    }
+    .gwd-p-149d {
+      position: absolute;
+      left: 300px;
+      top: 297px;
+      font-family: 'Times New Roman';
+      color: rgb(0, 0, 0);
+    }
+    .gwd-p-p98u {
+      position: absolute;
+      left: 300px;
+      top: 336px;
+      font-family: 'Times New Roman';
+      color: rgb(0, 0, 0);
+    }
+    .gwd-p-724h {
+      position: absolute;
+      left: 300px;
+      top: 373px;
+      font-family: 'Times New Roman';
+      text-align: left;
+      color: rgb(0, 0, 0);
+    }
+    .gwd-p-uwb8 {
+      position: absolute;
+      font-family: 'Times New Roman';
+      color: rgb(0, 0, 0);
+      left: 300px;
+      top: 262px;
+    }
+    .gwd-p-1f6y {
+      position: absolute;
+      font-family: 'Times New Roman';
+      color: rgb(0, 0, 0);
+      font-size: 12px;
+      left: 40px;
+      top: 458px;
+    }
+    .gwd-p-1tsb {
+      position: absolute;
+      font-size: 12px;
+      font-family: 'Times New Roman';
+      color: rgb(0, 0, 0);
+      left: 40px;
+      top: 476px;
+    }
+    .gwd-p-1ot2 {
+      position: absolute;
+      font-size: 12px;
+      left: 40px;
+      top: 494px;
+      font-family: 'Times New Roman';
+      text-align: left;
+      color: rgb(0, 0, 0);
+    }
+    .gwd-p-1moj {
+      position: absolute;
+      font-size: 12px;
+      left: 40px;
+      top: 512px;
+      font-family: 'Times New Roman';
+      text-align: left;
+      color: rgb(0, 0, 0);
+    }
+    .gwd-p-1yh4 {
+      position: absolute;
+      font-family: 'Times New Roman';
+      text-align: left;
+      color: rgb(0, 0, 0);
+      transform-origin: -496.531px 65px 0px;
+      font-size: 20px;
+      transform-style: preserve-3d;
+      left: 645px;
+      top: 420px;
+      width: 97px;
+      height: 21px;
+    }
+    .gwd-p-kdn8 {
+      left: 800px;
+      top: 420px;
+    }
+    .gwd-p-wcha {
+      left: 444px;
+      top: 420px;
+    }
+    .gwd-p-11za {
+      left: 588px;
+      top: 420px;
+    }
+    .gwd-p-12ch {
+      left: 739px;
+      top: 420px;
+    }

@@ -15,10 +15,15 @@ class Layout {
   public function view ($view_name, $params = array(), $layout ='default')
   {
     $this->addInclude("assets/css/bootstrap.min.css");
-    $this->addInclude("assets/js/jquery-1.11.3.min.js");
-    $this->addInclude("assets/js/jquery-ui/jquery-ui.min.js");
+    $this->addInclude("assets/css/voucher.css");
+    
+    $this->addInclude("assets/js/jquery-2.1.4.min.js"); 
+    $this->addInclude("assets/js/jquery.migrate.js");
+    $this->addInclude("assets/js/jquery-ui-1.11.4/jquery-ui.min.js"); 
     $this->addInclude("assets/js/bootstrap.min.js");
-    $this->addInclude("assets/js/jquery-ui/jquery-ui.min.css");
+    $this->addInclude("assets/js/jquery-ui-1.11.4/jquery-ui.min.css"); 
+    $this->addInclude("assets/js/jquery.print.js");
+    
     if($layout == 'default_sign')
     {
       $this->addInclude("assets/css/signin.css");
@@ -55,7 +60,7 @@ class Layout {
           {
             $final_includes .= '<script type="text/javascript" src="' . $include . '"></script>';
           } elseif(preg_match('/css$/',$include)) {
-            $final_includes .= '<link href="' . $include . '" rel="stylesheet" type="text/css" />';
+            $final_includes .= '<link href="' . $include . '" rel="stylesheet" type="text/css" media="screen, print" />';
           } else {}
           }
       }

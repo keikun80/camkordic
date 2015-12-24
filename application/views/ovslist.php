@@ -1,3 +1,4 @@
+<p id="ovsprint" style="display:none"></p>
 <div class="container">
   <div class="panel panel-primary">
     <div class="panel-heading">Open Voucher Management</div>
@@ -41,6 +42,7 @@
               <td>Tour</td>
               <td>ORG</td>
               <td>PAID</td>
+              <td>VOC</td>
           </tr>
           <?php
           foreach ($result->result() as $row)
@@ -55,7 +57,8 @@
               echo '<td>'.$row->cmobile.'</td>';
               echo '<td>'.$row->trcode.'</td>';
               echo '<td>'.$row->orgcode.'</td>';
-              echo '<td>'. ($row->isPaid == 'y' ? 'PAID' : 'UN-PAID').'</td>';
+              echo '<td>'. ($row->isPaid == 'y' ? 'PAID' : 'UN-PAID').'</td>'; 
+              echo '<td><button class="printvoc" type="button" value="'.$row->seq.'">PRINT</button></td>';
             echo '</tr>';
           }
           ?>
@@ -85,5 +88,23 @@ $(document).ready(function(){
         }
     });
 
+    $('#ovsprint').dialog({ 
+        modal:true,
+        autoOpen:false,
+        title : "Booking Ticket",
+        width : 900,
+		height: 680,
+		buttons : {
+			"print" : function() { $('.voucher_body').printElement({ overrideElementCSS: false, printTitle: "booking Ticket"});}, 
+			"confirm" : function () {$(this).dialog('close');}
+		}
+    });
+    $('.printvoc').click(function () { 
+		$.get("<?php echo $geturl;?>", {seq: $(this).val()})
+		 .done(function (data) {   
+			 $('#ovsprint').html(data);
+			 $('#ovsprint').dialog('open');
+		});
+    });
 });
 </script>

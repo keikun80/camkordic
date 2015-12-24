@@ -9,7 +9,8 @@ $htmlItems = array ('refer' => 'hidden|refer'
                    ,'returnDate' =>'text|returnDate'
                    ,'paymentDate' =>'text|paymentDate'
                    ,'regDate' =>'text|regDate'
-                   ,'openDate' => 'text|openDate'
+                   ,'openDate' => 'text|openDate' 
+				   ,'pickup' => 'text|pickup'
                    ,'trcode' => 'select|trcode'
                    ,'orgname' => 'select|orgname'
                    ,'amount' => 'text|amount' 
@@ -41,6 +42,7 @@ $strRegDate= $regDate['year'].'-'.$regDate['month'].'-'.$regDate['day'];
 $openDate = date_parse_from_format('Y-m-d', date('Y-m-d'));
 $strOpenDate = $openDate['year'].'-'.$openDate['month'].'-'.$openDate['day'];
 
+$pickup = NULL;
 $trcode = NULL;
 $orgname = NULL;
 $amount = NULL; 
@@ -55,56 +57,55 @@ $refer= (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '');
 
 if(isset($result))
 {
-  $seq= $result->row()->seq;
-  $cname = $result->row()->cname;
-  $cemail = $result->row()->cemail;
-  $cmobile = $result->row()->cmobile;
+	$seq= $result->row()->seq;
+	$cname = $result->row()->cname;
+	$cemail = $result->row()->cemail;
+	$cmobile = $result->row()->cmobile;
 
-  $departDate = date_parse_from_format('Y-m-d', $result->row()->departDate);
-  $strDepartDate = $departDate['year'].'-'.$departDate['month'].'-'.$departDate['day'];
+	$departDate = date_parse_from_format('Y-m-d', $result->row()->departDate);
+	$strDepartDate = $departDate['year'].'-'.$departDate['month'].'-'.$departDate['day'];
 
-  $returnDate = date_parse_from_format('Y-m-d', $result->row()->returnDate);
-  $strReturnDate = $returnDate['year'].'-'.$returnDate['month'].'-'.$returnDate['day'];
+	$returnDate = date_parse_from_format('Y-m-d', $result->row()->returnDate);
+	$strReturnDate = $returnDate['year'].'-'.$returnDate['month'].'-'.$returnDate['day'];
 
-  $paymentDate = date_parse_from_format('Y-m-d', $result->row()->paymentDate);
-  $strPaymentDate = $paymentDate['year'].'-'.$paymentDate['month'].'-'.$paymentDate['day'];
+	$paymentDate = date_parse_from_format('Y-m-d', $result->row()->paymentDate);
+	$strPaymentDate = $paymentDate['year'].'-'.$paymentDate['month'].'-'.$paymentDate['day'];
 
-  $bookingDate = date_parse_from_format('Y-m-d', $result->row()->regDate);
-  $strBookingDate= $regDate['year'].'-'.$regDate['month'].'-'.$regDate['day'];
+	$bookingDate = date_parse_from_format('Y-m-d', $result->row()->regDate);
+	$strBookingDate= $regDate['year'].'-'.$regDate['month'].'-'.$regDate['day'];
 
-  $openDate = date_parse_from_format('Y-m-d', $result->row()->openDate);
-  $strOpenDate = $openDate['year'].'-'.$openDate['month'].'-'.$openDate['day'];
+	$openDate = date_parse_from_format('Y-m-d', $result->row()->openDate);
+	$strOpenDate = $openDate['year'].'-'.$openDate['month'].'-'.$openDate['day'];
 
-  $trcode = $result->row()->trcode;
-  $orgname = $result->row()->orgname;
-  $amount = $result->row()->amount;
-  $totamount = $result->row()->totamount;
-  $nopadult = $result->row()->nopadult;
-  $nopchild = $result->row()->nopchild; 
-  $child_ratio = $result->row()->child_ratio;
-  $isPaid = array('y|PAID|', 'n|UN-PAID|selected');
-  $isOpen = array('y|OPEN|', 'n|CLOSE|selected');
+	$pickup = $result->row()->pickup;
+	$trcode = $result->row()->trcode;
+	$orgname = $result->row()->orgname;
+	$amount = $result->row()->amount;
+	$totamount = $result->row()->totamount;
+	$nopadult = $result->row()->nopadult;
+	$nopchild = $result->row()->nopchild; 
+	$child_ratio = $result->row()->child_ratio;
+	$isPaid = array('y|PAID|', 'n|UN-PAID|selected');
+	$isOpen = array('y|OPEN|', 'n|CLOSE|selected');
 
-  if($result->row()->isPaid == 'y')
-  {
-      $isPaid = array('y|PAID|selected', 'n|UN-PAID');
-  } else if($result->row()->isPaid == 'n') {
-      $isPaid = array('y|PAID|', 'n|UN-PAID|selected');
-  } else {
-      $isPaid = array('y|PAID|', 'n|UN-PAID|selected');
-  }
+	if($result->row()->isPaid == 'y')
+	{
+		$isPaid = array('y|PAID|selected', 'n|UN-PAID');
+	} else if($result->row()->isPaid == 'n') {
+		$isPaid = array('y|PAID|', 'n|UN-PAID|selected');
+	} else {
+		$isPaid = array('y|PAID|', 'n|UN-PAID|selected');
+	}
 
-  if($result->row()->isOpen == 'y')
-  {
-      $isOpen= array('y|OPEN|selected', 'n|CLOSE');
-  } else if($result->row()->isOpen == 'n') {
-      $isOpen = array('y|OPEN|', 'n|CLOSE|selected');
-  } else {
-      $isOpen = array('y|OPEN|', 'n|CLOSE|selected');
-  }
-
-
-}
+	if($result->row()->isOpen == 'y')
+	{
+		$isOpen= array('y|OPEN|selected', 'n|CLOSE');
+	} else if($result->row()->isOpen == 'n') {
+		$isOpen = array('y|OPEN|', 'n|CLOSE|selected');
+	} else {
+		$isOpen = array('y|OPEN|', 'n|CLOSE|selected');
+	}
+} // if($result) 
 
 function createTextItem($item, $value, $itemSet, $required = TRUE, $disable = FALSE)
 {
@@ -198,6 +199,11 @@ function createSelectBox($item, $itemSet, $required = TRUE, $disable = FALSE)
             <td><?php echo createTextItem('openDate', $strOpenDate, $htmlItems, TRUE, FALSE); ?></td>
           </tr>
           <tr>
+            <tr>
+            <td>Pickup Location</td>
+            <td><input type="text" name="pickup" id="pickup" value="<?php echo $pickup; ?>" required /> 
+            </td>
+          </tr>
             <td>Tour Service</td>
             <td><input type="text" name="trcode" id="trcode" value="<?php echo $trcode; ?>" required /> 
                 <button id="torsearch"> Find Tour </button>
@@ -232,6 +238,7 @@ function createSelectBox($item, $itemSet, $required = TRUE, $disable = FALSE)
               <td><?php echo createSelectBox('isOpen', $isOpen, TRUE, FALSE); ?></td>
           </tr>
         </table>
+        <button class="btn btn-lg btn-primary btn-block" type="button" id="button"><?php echo $buttonDesc;?>  </button>
         <button class="btn btn-lg btn-primary btn-block" type="submit" id="submit"><?php echo $buttonDesc;?>  </button>
       </form>
     </div>
@@ -241,7 +248,7 @@ function createSelectBox($item, $itemSet, $required = TRUE, $disable = FALSE)
   <button type="button" class="btn btn-default" id="goList">List</button>
   <button type="button" class="btn btn-default">Next</button>
 </div>
-</div>
+</div> 
 
 <script>
 $(document).ready( function (){
@@ -253,6 +260,8 @@ $(document).ready( function (){
 
   $('#goList').click( function () {
       window.location="<?php echo $refer;?>";
-  });
+  }); 
+
+  
 });
 </script>
