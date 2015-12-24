@@ -238,7 +238,6 @@ function createSelectBox($item, $itemSet, $required = TRUE, $disable = FALSE)
               <td><?php echo createSelectBox('isOpen', $isOpen, TRUE, FALSE); ?></td>
           </tr>
         </table>
-        <button class="btn btn-lg btn-primary btn-block" type="button" id="button"><?php echo $buttonDesc;?>  </button>
         <button class="btn btn-lg btn-primary btn-block" type="submit" id="submit"><?php echo $buttonDesc;?>  </button>
       </form>
     </div>
