@@ -54,7 +54,8 @@ class Ovsuser extends CI_Controller {
   			
   			$this->pagination->initialize($config);
   			
-  			$condition = array('isDel'=>'n' );
+  			//$condition = array('isDel'=>'n' ); 
+  			$condition = array();
   			$this->load->model('ovsmodel');
   			$result = $this->ovsmodel->ovslist('tbl_invent_user', $pageArticleLimit, $offset, $condition, 'usrKey'); 
   			
@@ -100,9 +101,11 @@ class Ovsuser extends CI_Controller {
   		$usrKey = $this->input->post('usrKey');
   		$usrName = $this->input->post('usrName'); 
   		$usrDomain = $this->input->post('usrDomain');
+  		$isDel = $this->input->post('isDel'); 
   		
   		$updVars= array('usrName'=> $usrName
-  				        ,'usrDomain'=> $usrDomain
+  				        ,'usrDomain'=> $usrDomain 
+  				        ,'isDel'=>$isDel
   		); 
   	
   		$isChange = $this->input->post('chgPass') ? $this->input->post('chgPass') : 'no'; 

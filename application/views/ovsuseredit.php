@@ -30,13 +30,13 @@ if(isset($result))
 	$usrPass= $result->row()->usrPass;
 	$isDel = array ('y|DELETE|','n|ACTIVE|selected' );
 
-	if($result->row()->isDel== 'y')
-	{
-		$isPaid = array('y|DELETE|selected', 'n|ACTIVE');
+	if($result->row()->isDel == 'y')
+	{ 
+		$isDel= array('y|DELETE|selected', 'n|ACTIVE');
 	} else if($result->row()->isDel == 'n') {
-		$isPaid = array('y|DELETE|', 'n|ACTIVE|selected');
+		$isDel= array('y|DELETE|', 'n|ACTIVE|selected');
 	} else {
-		$isPaid = array('y|DELETE|', 'n|ACTIVE|selected');
+		$isDel= array('y|DELETE|', 'n|ACTIVE|selected');
 	}
 } // if($result) 
 
