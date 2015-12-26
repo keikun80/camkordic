@@ -37,6 +37,7 @@
         <li><a href="#">User</a></li>
         <li><a href="#">Tour</a></li>
         <li><a href="#">Organization</a></li>
+        <li><a href="<?php echo $menu['logoutPath']; ?>" name="logout">Logout</a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
@@ -46,5 +47,5 @@
     <?php
       echo $content_for_page;
     ?>
-  </body>
+  </body> 
 </html>

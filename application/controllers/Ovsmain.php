@@ -3,8 +3,16 @@ defined ('BASEPATH') or exit('No direct access script allow');
 
 class Ovsmain extends CI_Controller {
 
+	
 	public function index($offset=0)
-	{
+	{ 
+		if(!$this->session->userdata('usrName'))
+		{
+			//Javascript alert
+			
+			//
+			header ('Location: '.$this->config->item('base_url').'index.php/ovsuser/index');
+		}
 		$this->ovslist($offset);
 	}
 

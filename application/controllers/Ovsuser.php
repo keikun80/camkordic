@@ -6,7 +6,13 @@ class Ovsuser extends CI_Controller {
   public function  index()
   {
       $actionJoinPath = $this->config->item('base_url').'index.php/'.get_class($this).'/enroll';
-      $vars = array ('actionJoinPath' => $actionJoinPath);
+      $actionAuthPath = $this->config->item('base_url').'index.php/'.get_class($this).'/authuser'; 
+      $refer = '';
+      $vars = array ('actionJoinPath' => $actionJoinPath, 
+      		         'actionAuthPath' => $actionAuthPath,
+      		         'refer' => $refer
+      ); 
+      
       $this->layout->setTitle("test");
       $this->layout->view('ovsmain', $vars ,'default_sign');
   }
@@ -22,18 +28,45 @@ class Ovsuser extends CI_Controller {
     $this->layout->view("ovsenroll",$viewVars, 'default_sign');
   }
 
-  public function checkUser()
-  {
-    $this->load->model('ovsmodel');
-    $vars = array('usrEmail'=> $this->input->post('usrEmail'));
-    $result = $this->ovsmodel->checkEmail($vars);
-    if($result > 0)
-    {
-        echo 1;
-    } else {
-      echo 0;
-    }
-  }
+	public function authuser()
+	{    
+		
+		$this->load->model('ovsmodel');
+		$usrEmail = $this->input->post('inputEmail'); 
+		$usrPassword = $this->input->post('inputPassword');  
+		$refer = $this->input->post('refer');
+		$resultSet = $this->ovsmodel->auth($usrEmail, $usrPassword); 
+		if($resultSet[0])
+		{  
+			$this->session->set_userdata('usrKey', $resultSet[0]->usrKey); 
+			$this->session->set_userdata('usrName', $resultSet[0]->usrName);
+			$this->session->set_userdata('usrEmail', $resultSet[0]->usrEmail); 
+			$this->session->set_userdata('usrDomain', $resultSet[0]->usrDomain); 
+		}  
+
+		if($refer =='')
+		{ 
+			header('Location: '.$this->config->item('base_url').'index.php/ovsmain/index');
+		} else {
+			header('Location: '.$refer);
+		}
+	} 
+	public function logout()
+	{
+		$this->session->unset_userdata('usrKey'); 
+		$this->session->unset_userdata('usrName');
+		$this->session->unset_userdata('usrEmail'); 
+		$this->session->unset_userdata('usrDomain');
+		header('Location: '.$this->config->item('base_url').'index.php/ovsmain/index');
+	}
+	public function checkUser()
+	{
+		$this->load->model('ovsmodel');
+		$vars = array('usrEmail'=> $this->input->post('usrEmail'));
+		$result = $this->ovsmodel->checkEmail($vars);
+		if($result > 0) { echo 1; } 
+		else { echo 0; }
+ 	} 
   public function test_enroll_step1()
   {
       $vars = array ('usrName' => $this->input->post('usrName'),

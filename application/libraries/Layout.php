@@ -28,14 +28,20 @@ class Layout {
     {
       $this->addInclude("assets/css/signin.css");
     }
-    
+   
     if($this->title_for_page !== NULL)
     {
         $separated_title_for_page = $this->title_separator . $this->title_for_page;
-    }
-    $view_content = $this->CI->load->view($view_name,$params, TRUE);
+    }  
+    
+   	$menu['logoutPath'] = $this->CI->config->item('base_url').'index.php/ovsuser/logout';
+    
+   	$view_content = $this->CI->load->view($view_name,$params, TRUE); 
+    
     $this->CI->load->view('layouts/'.$layout , array('content_for_page'=>$view_content,
-                                                     'title_for_page'=>$separated_title_for_page));
+                                                     'title_for_page'=>$separated_title_for_page,
+    		                                          'menu' => $menu
+    ));
   }
   public function addInclude($path, $prepend_base_url = TRUE)
   {
