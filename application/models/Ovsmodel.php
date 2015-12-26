@@ -40,7 +40,7 @@ class Ovsmodel extends CI_Model {
  		return $list->num_rows();
 	}
 
-	public function ovslist($limit, $offset=0, $condition)
+	public function ovslist($table, $limit, $offset=0, $condition, $orderKey)
 	{
 		if(!empty($condition))
 		{
@@ -49,9 +49,9 @@ class Ovsmodel extends CI_Model {
 		if ($offset > 0) { $this->db->limit($limit, $offset); }
 		else { $this->db->limit($limit); }
 		
-		$this->db->order_by('seq', 'DESC');
+		$this->db->order_by($orderKey, 'DESC');
 		
-		return $this->db->get('wp_tb_voucher_list');
+		return $this->db->get($table);
 	}
 
 

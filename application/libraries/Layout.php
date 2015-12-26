@@ -34,6 +34,7 @@ class Layout {
         $separated_title_for_page = $this->title_separator . $this->title_for_page;
     }  
     
+   	$menu['userPath'] = $this->CI->config->item('base_url').'index.php/ovsuser/ovsuserlist';
    	$menu['logoutPath'] = $this->CI->config->item('base_url').'index.php/ovsuser/logout';
     
    	$view_content = $this->CI->load->view($view_name,$params, TRUE); 

@@ -42,7 +42,7 @@ class Ovsmain extends CI_Controller {
 
 		$condition = array('isDel'=>'n' );
 		$this->load->model('ovsmodel');
-		$result = $this->ovsmodel->ovslist($pageArticleLimit, $offset, $condition);
+		$result = $this->ovsmodel->ovslist('wp_tb_voucher_list', $pageArticleLimit, $offset, $condition, 'seq');
 		$vars = array ('result'=> $result,
 						'listurl' => $_SERVER['PHP_SELF'],
 						'linkurl' => $this->config->item('base_url').'index.php/'.get_class($this).'/ovsedit',

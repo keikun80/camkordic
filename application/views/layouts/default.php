@@ -29,12 +29,11 @@
       </button>
       <a class="navbar-brand" href="#">Open Voucher Network</a>
     </div>
-
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li class="active"><a href="<?php echo base_url();?>index.php/Ovsmain">Voucher<span class="sr-only">(current)</span></a></li>
-        <li><a href="#">User</a></li>
+        <li><a href="<?php echo $menu['userPath']; ?>">Usesr</a></li>
         <li><a href="#">Tour</a></li>
         <li><a href="#">Organization</a></li>
         <li><a href="<?php echo $menu['logoutPath']; ?>" name="logout">Logout</a></li>
