@@ -32,7 +32,8 @@
       </div>
         <table class="table">
           <tr>
-              <td>ID</td>
+              <td>ID</td> 
+              <td>VOS</td>
               <td>Open</td>
               <td>Departure</td>
               <td>Book</td>
@@ -40,7 +41,6 @@
               <td>Name</td>
               <td>Mobile</td>
               <td>Tour</td>
-              <td>ORG</td>
               <td>PAID</td>
               <td>VOC</td>
           </tr>
@@ -49,6 +49,7 @@
           {
             echo '<tr>';
               echo '<td><a href="'.$linkurl.'/'.$row->seq.'">'.$row->seq.'</a></td>';
+              echo '<td>'.$row->cvos.'</td>';
               echo '<td>'. ($row->isOpen == 'y' ? 'open' : 'close').'</td>';
               echo '<td>'.date('Y-m-d', strtotime($row->departDate)).'</td>';
               echo '<td>'.date('Y-m-d', strtotime($row->regDate)).'</td>';
@@ -56,9 +57,14 @@
               echo '<td><a href="'.$linkurl.'/'.$row->seq.'">'.$row->cname.'</a></td>';
               echo '<td>'.$row->cmobile.'</td>';
               echo '<td>'.$row->trcode.'</td>';
-              echo '<td>'.$row->orgcode.'</td>';
-              echo '<td>'. ($row->isPaid == 'y' ? 'PAID' : 'UN-PAID').'</td>'; 
-              echo '<td><button class="printvoc" type="button" value="'.$row->seq.'">PRINT</button></td>';
+              echo '<td>'. ($row->isPaid == 'y' ? 'PAID' : 'UN-PAID').'</td>';  
+              if($row->voucherPath != '') 
+              {
+              	echo '<td><a href="'.$row->voucherPath.'">PDF</td>'; 
+          	  } else {
+              	echo '<td><a href="#" class="printpdf" value="'.$row->seq.'">CREATE</a></td>';
+          	  }	
+              echo '<td><button class="viewvoc" type="button" value="'.$row->seq.'">VIEW</button></td>';
             echo '</tr>';
           }
           ?>
@@ -68,7 +74,9 @@
   <?php echo $this->pagination->create_links(); ?>
 </div>
 <script>
-$(document).ready(function(){
+$(document).ready(function(){ 
+
+	$('.glyphicon').hide(); 
     $('#fromdt').datepicker({
         defaultDate:"+1W",
         changeMonths: true,
@@ -98,8 +106,28 @@ $(document).ready(function(){
 			"print" : function() { $('.voucher_body').printElement({ overrideElementCSS: false, printTitle: "booking Ticket"});}, 
 			"confirm" : function () {$(this).dialog('close');}
 		}
-    });
-    $('.printvoc').click(function () { 
+    }); 
+    $('.pdfvoc').click (function (data) { 
+    	alert('aaaaaaaa');  
+    }); 
+    
+    $('.printpdf').click(function () {   
+       	c = $(this);  
+        v = c.attr('value');   
+       	c.html('<span class="glyphicon glyphicon-repeat" aria-hidden="true">');
+       	
+    	$.get ("<?php echo $pdfurl; ?>", {seq : v }) 
+    	  .done(function (data) {     
+        	  if(data != '') {
+          		c.text('PDF'); 
+          		c.removeClass('printpdf'); 
+          		c.addClass('pdfvoc');  
+          		c.attr('href' , data);
+        	  }
+    	});  
+    	
+    }); 
+    $('.viewvoc').click(function () { 
 		$.get("<?php echo $geturl;?>", {seq: $(this).val()})
 		 .done(function (data) {   
 			 $('#ovsprint').html(data);

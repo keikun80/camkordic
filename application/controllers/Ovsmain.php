@@ -5,12 +5,9 @@ class Ovsmain extends CI_Controller {
 
 	
 	public function index($offset=0)
-	{ 
+	{   
 		if(!$this->session->userdata('usrName'))
 		{
-			//Javascript alert
-			
-			//
 			header ('Location: '.$this->config->item('base_url').'index.php/ovsuser/index');
 		}
 		$this->ovslist($offset);
@@ -46,6 +43,7 @@ class Ovsmain extends CI_Controller {
 		$vars = array ('result'=> $result,
 						'listurl' => $_SERVER['PHP_SELF'],
 						'linkurl' => $this->config->item('base_url').'index.php/'.get_class($this).'/ovsedit',
+						'pdfurl' => $this->config->item('base_url').'index.php/'.get_class($this).'/getpdf',
 				        'geturl' => $this->config->item('base_url').'index.php/'.get_class($this).'/ovsprint');
 		$this->layout->setTitle("OVS MANAGEMENT - LIST");
 		$this->layout->view('ovslist',$vars);
@@ -62,9 +60,10 @@ class Ovsmain extends CI_Controller {
 		return $retVal;
 	}  
 	
-	public  function ovsprint()
-	{  
-		$seq = $this->input->get('seq');	
+	public function ovsprint()
+	{   
+		$seq = $this->input->get('seq');	 
+		
 		$retVal =0;
 		if($seq > 0) 
 		{
@@ -185,6 +184,38 @@ class Ovsmain extends CI_Controller {
 		}
 	}
 
+	public function getpdf($seq = 0)
+	{  
+		if(!$seq)
+			$seq = $this->input->get('seq');
+		
+		$retVal =0;
+		if($seq > 0)
+		{
+			$retVal = $this->_getovsvoucher($seq)->row();
+		} 
+		
+		$dataSet = array();
+		
+		foreach ($retVal as $key => $value)
+			$dataSet[$key] = $value;
+		
+		$html = $this->load->view('tpl/voucher_mail.tpl.php', $dataSet, true);		 
+		
+		$filePath = getcwd().'/files/'.$dataSet['cvos'].'.pdf';   
+		
+		$this->load->helper('dompdf','files');   
+		
+		$output = pdf_creator($html,$filePath ,false); 
+		
+		file_put_contents($filePath, $output);  
+		
+		$updData['voucherPath'] = $this->config->item('base_url').'files/'.basename($filePath);  
+		$this->db->where('seq', $seq);
+		$this->db->update('wp_tb_voucher_list',$updData);	 
+		
+		echo $updData['voucherPath'];
+	}
 	
 /*
   public function dummydata($count=1000)
