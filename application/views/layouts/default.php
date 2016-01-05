@@ -31,8 +31,10 @@
     </div>
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="<?php echo base_url();?>index.php/Ovsmain">Voucher<span class="sr-only">(current)</span></a></li>
+      <ul class="nav navbar-nav"> 
+      <!-- active class can change background color -->
+        <li><a href="<?php echo base_url();?>index.php/Ovsmain">Voucher<span class="sr-only">(current)</span></a></li>
+        <li><a href="<?php echo base_url();?>index.php/Ovsmain/ovsedit">New<span class="sr-only"></span></a></li>
         <li><a href="<?php echo $menu['userPath']; ?>">Usesr</a></li>
         <li><a href="#">Tour</a></li>
         <li><a href="#">Organization</a></li>

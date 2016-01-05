@@ -1,5 +1,11 @@
 <?php
-// Edit data implement
+// Edit data implement 
+$ttypeSet =   array ('tour' => 'tour'
+			     ,'rentcar' =>'rentcar'
+			    , 'hotel' => 'hotel'
+			    ,'train' => 'train'
+			    ,'openbus' => 'openbus'); 
+
 $htmlItems = array ('refer' => 'hidden|refer'
                    ,'seq' => 'hidden|seq'
                    ,'cname' => 'text|cname'
@@ -11,8 +17,8 @@ $htmlItems = array ('refer' => 'hidden|refer'
                    ,'regDate' =>'text|regDate'
                    ,'openDate' => 'text|openDate' 
 				   ,'pickup' => 'text|pickup'
-                   ,'trcode' => 'select|trcode'
-                   ,'orgname' => 'select|orgname'
+                   ,'trcode' => 'text|trcode'
+                   ,'orgemail' => 'text|orgemail'
                    ,'amount' => 'text|amount' 
 		           ,'totamount' => 'text|totamount'  
 		           ,'single_charge' => 'text|single_charge' 
@@ -22,36 +28,29 @@ $htmlItems = array ('refer' => 'hidden|refer'
                    ,'isPaid' => 'select|isPaid'
                    ,'isOpen' => 'select|isOpen');
 
-/* initialize vars */
+/* initialize vars */ 
 $seq = NULL;
 $cname = NULL;
 $cemail = NULL;
-$cmobile = NULL;
-$departDate = date_parse_from_format('Y-m-d', date('Y-m-d'));
-$strDepartDate = $departDate['year'].'-'.$departDate['month'].'-'.$departDate['day'];
+$cmobile = NULL; 
+$strDepartDate = date('Y-m-d');
+$strReturnDate = $strDepartDate;
+$strPaymentDate =  $strDepartDate;
+$strRegDate= $strDepartDate;
+$strOpenDate = $strDepartDate;
 
-$returnDate = date_parse_from_format('Y-m-d', date('Y-m-d'));
-$strReturnDate = $returnDate['year'].'-'.$returnDate['month'].'-'.$returnDate['day'];
-
-$paymentDate = date_parse_from_format('Y-m-d', date('Y-m-d'));
-$strPaymentDate = $paymentDate['year'].'-'.$paymentDate['month'].'-'.$paymentDate['day'];
-
-$regDate = date_parse_from_format('Y-m-d',date('Y-m-d'));
-$strRegDate= $regDate['year'].'-'.$regDate['month'].'-'.$regDate['day'];
-
-$openDate = date_parse_from_format('Y-m-d', date('Y-m-d'));
-$strOpenDate = $openDate['year'].'-'.$openDate['month'].'-'.$openDate['day'];
-
+$ttype = NULL;
 $pickup = NULL;
 $trcode = NULL;
-$orgname = NULL;
+$orgemail = NULL;
 $amount = NULL; 
 $totamount = NULL;
-$nopadult = NULL;
+$nopadult = NULL; 
+$child_ratio =NULL;
 $nopchild = NULL;
 $isPaid = array ('y|PAID|','n|UN-PAID|selected' );
 $isOpen = array ('y|OPEN|','n|CLOSE|selected' );
-
+$remark = NULL;
 
 $refer= (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '');
 
@@ -62,29 +61,37 @@ if(isset($result))
 	$cemail = $result->row()->cemail;
 	$cmobile = $result->row()->cmobile;
 
-	$departDate = date_parse_from_format('Y-m-d', $result->row()->departDate);
-	$strDepartDate = $departDate['year'].'-'.$departDate['month'].'-'.$departDate['day'];
+	//$departDate = date_parse_from_format('y-m-d', $result->row()->departDate);
+	//$strDepartDate = $departDate['year'].'-'.$departDate['month'].'-'.$departDate['day']; 
 
-	$returnDate = date_parse_from_format('Y-m-d', $result->row()->returnDate);
-	$strReturnDate = $returnDate['year'].'-'.$returnDate['month'].'-'.$returnDate['day'];
+	//$returnDate = date_parse_from_format('y-m-d', $result->row()->returnDate);
+	//$strReturnDate = $returnDate['year'].'-'.$returnDate['month'].'-'.$returnDate['day'];
 
-	$paymentDate = date_parse_from_format('Y-m-d', $result->row()->paymentDate);
-	$strPaymentDate = $paymentDate['year'].'-'.$paymentDate['month'].'-'.$paymentDate['day'];
+	//$paymentDate = date_parse_from_format('y-m-d', $result->row()->paymentDate);
+	//$strPaymentDate = $paymentDate['year'].'-'.$paymentDate['month'].'-'.$paymentDate['day'];
 
-	$bookingDate = date_parse_from_format('Y-m-d', $result->row()->regDate);
-	$strBookingDate= $regDate['year'].'-'.$regDate['month'].'-'.$regDate['day'];
+	//$regDate= date_parse_from_format('y-m-d', $result->row()->regDate);
+	//$strRegDate= $regDate['year'].'-'.$regDate['month'].'-'.$regDate['day'];
 
-	$openDate = date_parse_from_format('Y-m-d', $result->row()->openDate);
-	$strOpenDate = $openDate['year'].'-'.$openDate['month'].'-'.$openDate['day'];
+	//$openDate = date_parse_from_format('Y-m-d', $result->row()->openDate);
+	//$strOpenDate = $openDate['year'].'-'.$openDate['month'].'-'.$openDate['day'];
 
+	$strDepartDate = $result->row()->departDate; 
+	$strReturnDate = $result->row()->returnDate;
+	$strOpenDate = $result->row()->openDate;
+	$strPaymentDate = $result->row()->paymentDate;
+	$strRegDate = $result->row()->regDate; 
+	
+	$ttype = $result->row()->ttype;
 	$pickup = $result->row()->pickup;
 	$trcode = $result->row()->trcode;
-	$orgname = $result->row()->orgname;
+	$orgemail = $result->row()->orgemail;
 	$amount = $result->row()->amount;
 	$totamount = $result->row()->totamount;
 	$nopadult = $result->row()->nopadult;
 	$nopchild = $result->row()->nopchild; 
-	$child_ratio = $result->row()->child_ratio;
+	$child_ratio = $result->row()->child_ratio; 
+	$remark = $result->row()->remark;
 	$isPaid = array('y|PAID|', 'n|UN-PAID|selected');
 	$isOpen = array('y|OPEN|', 'n|CLOSE|selected');
 
@@ -106,7 +113,28 @@ if(isset($result))
 		$isOpen = array('y|OPEN|', 'n|CLOSE|selected');
 	}
 } // if($result) 
+/* initialize tour set */
+$trCodeArr = array();
+foreach ($tourSet->result() as $row)
+{ 
+	if($trcode == $row->ID) {
+		$trCodeArr[] = $row->ID.'|'.$row->post_title.'|selected';
+	} else {
+		$trCodeArr[] = $row->ID.'|'.$row->post_title;
+	}
+} 
+$ttypeArr = array(); 
+foreach ($ttypeSet as $key => $value)
+{ 
+	if($value == $ttype)
+	{
+		$ttypeArr[] = $key.'|'.$value.'|selected';
+	} else {
+		$ttypeArr[] = $key.'|'.$value;	
+	}
+}
 
+/* end of initialize tour set */
 function createTextItem($item, $value, $itemSet, $required = TRUE, $disable = FALSE)
 {
     $item = explode('|',$itemSet[$item]);
@@ -142,12 +170,18 @@ function createTextItem($item, $value, $itemSet, $required = TRUE, $disable = FA
 function createSelectBox($item, $itemSet, $required = TRUE, $disable = FALSE)
 {
   $selectBox = '<select id="'.$item.'" name="'.$item.'">';
-  $optionList = '<option value="%value%" %selected%>%item%</option>';
+  //$optionList = '<option value="%value%" %selected%>%item%</option>';
 
   for ($i=0; $i < count($itemSet); $i++)
-  {
-    $optionVars = explode('|',$itemSet[$i]);
-    @$selectBox .= '<option value="'.$optionVars[0].'" '.$optionVars[2].'>'.$optionVars[1].'</option>';
+  { 
+    $optionVars = explode('|',$itemSet[$i]); 
+    if(isset($optionVars[2])) //isset selected
+    { 
+    	@$selectBox .= '<option value="'.$optionVars[0].'" '.$optionVars[2].'>'.$optionVars[1].'</option>'; 
+    } else {
+		@$selectBox .= '<option value="'.$optionVars[0].'" >'.$optionVars[1].'</option>'; 
+    } 
+    //@$selectBox .= '<option value="'.$optionVars[0].'" >'.$optionVars[1].'</option>'; 
   }
   $selectBox .= '</select>';
   return $selectBox;
@@ -171,6 +205,19 @@ function createSelectBox($item, $itemSet, $required = TRUE, $disable = FALSE)
             <td><?php echo createTextItem('cname', $cname, $htmlItems, TRUE, FALSE); ?></td>
           </tr>
           <tr>
+            <td>Voucher type</td>
+               <td><?php echo createSelectBox('ttype',$ttypeArr, TRUE, FALSE); ?> </td>
+          </tr>
+          <tr>
+            <td>Tour Service</td>
+               <td><?php echo createSelectBox('trcode',$trCodeArr, TRUE, FALSE); ?> </td>
+          </tr>
+          <tr>
+            <td>Organiztion</td>
+            <td><input type="text" name="orgemail" id="orgemail" value="<?php echo $orgemail; ?>" required />
+           </td>
+          </tr>
+          <tr>
             <td>Customer Email</td>
             <td><?php echo createTextItem('cemail', $cemail, $htmlItems, TRUE, FALSE); ?></td>
           </tr>
@@ -192,7 +239,7 @@ function createSelectBox($item, $itemSet, $required = TRUE, $disable = FALSE)
           </tr>
           <tr>
             <td>Booking Date</td>
-            <td><?php echo createTextItem('regDate', $strBookingDate, $htmlItems, TRUE, FALSE); ?></td>
+            <td><?php echo createTextItem('regDate', $strRegDate, $htmlItems, TRUE, FALSE); ?></td>
           </tr>
           <tr>
             <td>Open Date</td>
@@ -203,17 +250,11 @@ function createSelectBox($item, $itemSet, $required = TRUE, $disable = FALSE)
             <td>Pickup Location</td>
             <td><input type="text" name="pickup" id="pickup" value="<?php echo $pickup; ?>" required /> 
             </td>
-          </tr>
-            <td>Tour Service</td>
-            <td><input type="text" name="trcode" id="trcode" value="<?php echo $trcode; ?>" required /> 
-                <button id="torsearch"> Find Tour </button>
-            </td>
-          </tr>
+          </tr> 
           <tr>
             <td>Organiztion</td>
-            <td><input type="text" name="orgname" id="orgname" value="<?php echo $orgname;?>" required />
-                <button id="torsearch"> Find Organization </button>
-              </td>
+            <td><input type="text" name="orgemail" id="orgemail" value="<?php echo $orgemail; ?>" required />
+           </td>
           </tr>
           <tr>
             <td>Amount</td>
@@ -237,6 +278,10 @@ function createSelectBox($item, $itemSet, $required = TRUE, $disable = FALSE)
             <td>Open</td>
               <td><?php echo createSelectBox('isOpen', $isOpen, TRUE, FALSE); ?></td>
           </tr>
+          <tr>
+            <td>Remark</td>
+              <td><textarea row="4" cols="23" name="remark"><?php echo $remark; ?></textarea></td>
+          </tr>
         </table>
         <button class="btn btn-lg btn-primary btn-block" type="submit" id="submit"><?php echo $buttonDesc;?>  </button>
       </form>
@@ -255,7 +300,7 @@ $(document).ready( function (){
   $('#returnDate').datepicker({ dateFormat : "yy-mm-dd"});
   $('#paymentDate').datepicker({ dateFormat : "yy-mm-dd"});
   $('#openDate').datepicker({ dateFormat : "yy-mm-dd"});
-  $('#bookingDate').datepicker( { dateFormat :"yy-mm-dd"});
+  $('#regDate').datepicker( { dateFormat :"yy-mm-dd"});
 
   $('#goList').click( function () {
       window.location="<?php echo $refer;?>";

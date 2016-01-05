@@ -54,5 +54,19 @@ class Ovsmodel extends CI_Model {
 		return $this->db->get($table);
 	}
 
-
+	public function get_cvos_id($ttype,$date)
+	{   
+		$this->db->where('ttype' , $ttype);
+		$this->db->where('regDate', $date);
+		$resObj = $this->db->count_all_results('wp_tb_voucher_list'); 
+		$cvos = strtoupper($ttype.date('ymd',strtotime($date))."-".$resObj);
+		
+		return $cvos;
+	}
+	
+	public function get_tour_post($WP_ID) 
+	{
+		$resObj = $this->db->get_where('wp_posts',array('ID'=>$WP_ID));  
+		return $resObj->row();
+	}
 } // End of Class 

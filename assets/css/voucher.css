@@ -242,4 +242,7 @@
     .gwd-p-12ch {
       left: 739px;
       top: 420px;
-    }
+    } 
+    
+    .vocclose { background-color:#F1B7B7; }
+    .vocopen { background-color:#BEF1B7; }

@@ -44,7 +44,7 @@ class Ovsmain extends CI_Controller {
 						'listurl' => $_SERVER['PHP_SELF'],
 						'linkurl' => $this->config->item('base_url').'index.php/'.get_class($this).'/ovsedit',
 						'pdfurl' => $this->config->item('base_url').'index.php/'.get_class($this).'/getpdf',
-				        'geturl' => $this->config->item('base_url').'index.php/'.get_class($this).'/ovsprint');
+				        'openurl' => $this->config->item('base_url').'index.php/'.get_class($this).'/ovsopen');
 		$this->layout->setTitle("OVS MANAGEMENT - LIST");
 		$this->layout->view('ovslist',$vars);
 	}
@@ -60,62 +60,49 @@ class Ovsmain extends CI_Controller {
 		return $retVal;
 	}  
 	
-	public function ovsprint()
+	public function ovsopen()
 	{   
-		$seq = $this->input->get('seq');	 
+		$seq = $this->input->post('seq');	 
+		$cmd= $this->input->post('cmd');	 
 		
 		$retVal =0;
-		if($seq > 0) 
+	
+		$this->db->where('seq', $seq); 
+		$this->db->set('isOpen',$cmd);
+		$this->db->update('wp_tb_voucher_list'); 
+	
+		$this->db->where('seq',$seq);
+		$this->db->select('isOpen');
+		$res= $this->db->get('wp_tb_voucher_list'); 
+		$status = $res->row()->isOpen;	  
+	
+		if($status == 'y')
 		{
-			$retVal = $this->_getovsvoucher($seq);
-		}    
-		$retHtml = '<div class="voucher_body">
-						<p class="gwd-p-10g2">KVISION TOURS
-		<br class="">&nbsp; &nbsp; &nbsp; &nbsp;비전투어
-		<br class="">
-		<br class="">
-		</p>
-		<p class="gwd-p-1vai">케이비전투어</p>
-		<p class="gwd-p-cczf">Booking Ticket</p>
-		<p class="gwd-p-4dku">No :&nbsp;</p>
-		<p class="gwd-p-wj6z">'.$retVal->row()->cvos.'</p>
-		<p class="gwd-p-azle">Booking Date :</p>
-		<p class="gwd-p-1e68">'.$retVal->row()->regDate.'</p>
-		<p class="gwd-p-2zzh">Customer Name (고객성명) :</p>
-		<p class="gwd-p-1y0u">'.$retVal->row()->cname.'</p>
-		<p class="gwd-p-pzcs">Tour Type (티켓 종류):</p>
-		<p class="gwd-p-d3i0">Departure Date (출발일):</p>
-		<p class="gwd-p-8fbn">Pickup Place (픽업장소):</p>
-		<p class="gwd-p-pn4n">Persons (인원):</p>
-		<p class="gwd-p-r05n">Price (가격):</p>
-		<p class="gwd-p-1ve2">'.$retVal->row()->ttype.'</p>
-		<p class="gwd-p-149d">성인 : '.$retVal->row()->nopadult.' 명 (child(소아) '.$retVal->row()->nopchild.'명)</p>
-		<p class="gwd-p-p98u">'.$retVal->row()->pickup.'</p>
-		<p class="gwd-p-724h">'.$retVal->row()->totamount.'USD</p>
-		<p class="gwd-p-uwb8">'.$retVal->row()->departDate.'</p>
-		<p class="gwd-p-1f6y">Address : 72 Tran Nhay Duat St, Hoan Kiem , Ha noi, Vietnam</p>
-		<p class="gwd-p-1tsb">Email : vision1@kvisiontour.com</p>
-		<p class="gwd-p-1ot2">Phone : +84 4 3871 5555 / +84 93 508 2402</p>
-		<p class="gwd-p-1moj">Website : www.kvisiontours.com</p>
-		<p class="gwd-p-1yh4 gwd-p-wcha" style="">Accountant</p>
-		<p class="gwd-p-1yh4 gwd-p-kdn8 gwd-p-11za">Customer</p>
-		<p class="gwd-p-1yh4 gwd-p-kdn8 gwd-p-12ch">Seller</p> </div>'; 
-
-		print ($retHtml);
+			//send voucher to org and customer and kvision			
+		} else {
+			//senc cancel request to org and customer and kbvision
+		}
+		echo $status; 
+		
+			
 	}
 	public function ovsedit($seq=0)
-	{
+	{ 
+		$tourSet = $this->gettourlist(); 
+		
 		if($seq > 0 )
 		{
 			$vars['actionUpdUrl'] = $this->config->item('base_url').'index.php/'.get_class($this).'/ovsUpdvoucher';
 			$vars['buttonDesc'] = 'UPDATE';
-			$vars['result'] = $this->_getovsvoucher($seq); 
+			$vars['result'] = $this->_getovsvoucher($seq);  
+			$vars['tourSet'] = $tourSet;
 			
 			$this->layout->setTitle("OVS MANAGEMENT - EDIT");
 			$this->layout->view('ovsedit',$vars);
 		} else {
 			$vars['actionUpdUrl'] = $this->config->item('base_url').'index.php/'.get_class($this).'/ovsUpdvoucher';
 			$vars['buttonDesc'] = 'REGISTRATION';
+			$vars['tourSet'] = $tourSet;
 			$this->layout->setTitle("OVS MANAGEMENT - EDIT");
 			$this->layout->view('ovsedit',$vars);
 		}
@@ -124,7 +111,17 @@ class Ovsmain extends CI_Controller {
 	public function ovsdelete()
 	{
 	}
+
+	public function gettourlist()
+	{ 
+		$this->db->where('post_status','publish');
+		$this->db->where('post_type' , 'post'); 
+		$this->db->select(array('ID','post_title'));
+		$resSet = $this->db->get('wp_posts');   
 	
+		if($resSet->num_rows() > 0) { return $resSet; }
+		else { return NULL; }
+	}
 	public function ovsnew()
 	{
 		$this->layout->setTitle("OVS MANAGEMENT - NEW");
@@ -144,13 +141,15 @@ class Ovsmain extends CI_Controller {
 		$pickup = $this->input->post('pickup');
 		$nopadult = $this->input->post('nopadult');
 		$nopchild = $this->input->post('nopchild');
-		$openDate = $this->input->post('openDate');
+		$openDate = $this->input->post('openDate'); 
+		$ttype = $this->input->post('ttype');
 		$trcode = $this->input->post('trcode');
-		$orgname = $this->input->post('orgname');
+		$orgemail = $this->input->post('orgemail');
 		$isPaid = $this->input->post('isPaid');
 		$isOpen = $this->input->post('isOpen');
 		$amount = $this->input->post('amount');
-		$totamount = $this->input->post('totamount'); 
+		$totamount = $this->input->post('totamount');  
+		$remark = $this->input->post('remark');
 
 		$updVars = array('cname' => $cname,
 						'cemail'=> $cemail,
@@ -161,19 +160,23 @@ class Ovsmain extends CI_Controller {
 						'paymentDate' => $paymentDate,
 						'openDate' => $openDate, 
 						'nopadult'=> $nopadult,
-						'nopchild'=> $nopchild, 
+						'nopchild'=> $nopchild,  
+					    'ttype'=>$ttype,
 						'amount'=> $amount,
 						'totamount'=> $totamount,
 						'pickup' => $pickup,
 						'trcode' => $trcode, 
-						'orgname' => $orgname, 
-						'isPaid' => $isPaid,
+						'orgemail' => $orgemail, 
+						'isPaid' => $isPaid, 
+				        'remark' => $remark,
 						'isOpen'=> $isOpen);
 
 		if($seq> 0) {
        		$this->db->where('seq',$seq);
         	$this->db->update('wp_tb_voucher_list',$updVars);
-    	} else {
+    	} else {  
+    		$this->load->model('ovsmodel');
+    		$updVars['cvos'] = $this->ovsmodel->get_cvos_id($updVars['ttype'], $updVars['regDate']);
 			$this->db->insert('wp_tb_voucher_list', $updVars);
 		}
 		if($refer == '') {
@@ -182,8 +185,52 @@ class Ovsmain extends CI_Controller {
 		} else {
 			header('location:'.$refer);
 		}
-	}
+	} 
 
+	public function getemail($seq = 0)
+	{ 
+		$this->load->model('ovsmodel');
+		if(!$seq) $seq = $this->input->get('seq'); 
+		
+		$retVal = 0;   
+		if($seq > 0)
+		{
+			$vocInfo = $this->_getovsvoucher($seq)->row();  
+			$retVal = $this->ovsmodel->get_tour_post($vocInfo->trcode);
+		} 	
+		$strings = explode('[wptab name', $retVal->post_content);
+
+		//table content;  
+		$htmlContent = "<table> 
+				<tr> <td>Customer</td><td>".$vocInfo->cname."</td></tr>
+				<tr> <td>Tour</td><td>".$retVal->post_title."</td></tr>
+				<tr> <td>Departure(check-in)</td><td>".$vocInfo->departDate."</td></tr>
+				<tr> <td>Return(check-out)</td><td>".$vocInfo->returnDate."</td></tr>
+				<tr> <td>Booking Date </td><td>".$vocInfo->regDate."</td></tr>
+				<tr> <td>persons</td><td>Adult: ".$vocInfo->nopadult."  Children: ".$vocInfo->nopchild." </td></tr>
+				<tr> <td>Pickup Location </td><td>".$vocInfo->pickup."</td></tr>
+				<tr> <td>Remark</td><td>".$vocInfo->remark."</td></tr>";
+		foreach ($strings as $key => $value)
+		{
+			if(preg_match('/^=/', $value))
+			{ 
+				$tempString= explode(']',$value);	  
+				$strlen_1 = strlen($tempString[0]);
+				$tempString[0] = mb_substr($tempString[0], 2, $strlen_1);   
+				$strlen_2 = strlen($tempString[0]); 
+				$tempString[0] = mb_substr($tempString[0], 0 ,-1); 
+				//additional Content;  
+				
+				$htmlContent .= "<tr><td colspan='2'>".$tempString[0]."<td></tr>";
+				//echo $tempString[0]; //Title   
+				$tempString[1] = mb_substr($tempString[1], 0, -7);  // Content; 
+				$htmlContent .= "<tr><td colspan='2'>".$tempString[1]."<td></tr>";
+			}
+		}  
+		$htmlContent .="</table>";
+		echo $htmlContent;
+		
+	}
 	public function getpdf($seq = 0)
 	{  
 		if(!$seq)

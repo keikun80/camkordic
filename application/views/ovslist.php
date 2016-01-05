@@ -4,67 +4,56 @@
     <div class="panel-heading">Open Voucher Management</div>
     <div class="panel-body">
       <div class="wall">
-        SEARCH OPTION
         <form>
-          <label for="keydate" class="sr-only">date type</label>
-          Date Type :
-            <select id="keydate" name="keydate">
-                <option value="pdate">Payment</option>
-                <option value="bdate">Booking</option>
-                <option value="ddate">Departure</option>
-                <option value="odate">Open</option>
-            </select>
+          <label for="cvos" class="sr-only">Booking Date :</label>
+          Booking Date :
             <input type="text" name="fromdt" id="fromdt" /> ~ <input type="text" name="todt" id="todt" />
-          information :
-          <select id="keytype" name="keytype">
-              <option value="name">Name</option>
-              <option value="email">email</option>
-              <option value="mobile">mobile</option>
-          </select>
+          VOUCHER NO :
           <input type="text" name="keyword" id="keyword" />
-          TOUR:
-            <select id="torKey" name="torKey">
-            </select>
-          ORG :
-            <select id="orgKey" name="orgKey">
-            </select>
-        </form>
+          CUSTOMER :
+          <input type="text" name="s_cname" id="s_cname" /> 
+          <button id="subbtn" name="subbtn" type"button">SEARCH</button>
+        </form> 
       </div>
         <table class="table">
           <tr>
-              <td>ID</td> 
-              <td>VOS</td>
-              <td>Open</td>
-              <td>Departure</td>
-              <td>Book</td>
-              <td>Payment</td>
-              <td>Name</td>
-              <td>Mobile</td>
-              <td>Tour</td>
+              <td>VOUCHER NO</td>
+              <td>DEPARTURE</td>
+              <td>BOOK</td>
+              <!-- <td>Payment</td> -->
+              <td>NAME</td>
+              <td>MOBILE</td>
+              <td>TOUR</td>
               <td>PAID</td>
-              <td>VOC</td>
+              <td>STATUS</td>
+              <td>VOUCHER</td>
+              <td>OPEN CMD</td>
           </tr>
           <?php
           foreach ($result->result() as $row)
-          {
-            echo '<tr>';
-              echo '<td><a href="'.$linkurl.'/'.$row->seq.'">'.$row->seq.'</a></td>';
-              echo '<td>'.$row->cvos.'</td>';
-              echo '<td>'. ($row->isOpen == 'y' ? 'open' : 'close').'</td>';
+          {   
+          	$trClass = "vocclose";
+          	if($row->isOpen == 'y') 
+          	{
+          		$trClass="vocopen";	
+          	}
+            echo '<tr class="'.$trClass.'">';
+              echo '<td><a href="'.$linkurl.'/'.$row->seq.'">'.$row->cvos.'</a></td>';
               echo '<td>'.date('Y-m-d', strtotime($row->departDate)).'</td>';
               echo '<td>'.date('Y-m-d', strtotime($row->regDate)).'</td>';
-              echo '<td>'.date('Y-m-d', strtotime($row->paymentDate)).'</td>';
+              //echo '<td>'.date('Y-m-d', strtotime($row->paymentDate)).'</td>';
               echo '<td><a href="'.$linkurl.'/'.$row->seq.'">'.$row->cname.'</a></td>';
               echo '<td>'.$row->cmobile.'</td>';
               echo '<td>'.$row->trcode.'</td>';
               echo '<td>'. ($row->isPaid == 'y' ? 'PAID' : 'UN-PAID').'</td>';  
+              echo '<td><span id="'.$row->seq."status".'">'.($row->isOpen == 'y' ? 'OPENED' : 'CLOSED').'</span></td>';  
               if($row->voucherPath != '') 
               {
-              	echo '<td><a href="'.$row->voucherPath.'">PDF</td>'; 
+              	echo '<td><a href="'.$row->voucherPath.'">VIEW</td>'; 
           	  } else {
               	echo '<td><a href="#" class="printpdf" value="'.$row->seq.'">CREATE</a></td>';
           	  }	
-              echo '<td><button class="viewvoc" type="button" value="'.$row->seq.'">VIEW</button></td>';
+              echo '<td><button class="openvoc" type="button" value="'.$row->seq.'">'. ($row->isOpen == 'y' ? 'to close' : 'to open').'</button></td>';
             echo '</tr>';
           }
           ?>
@@ -100,11 +89,11 @@ $(document).ready(function(){
         modal:true,
         autoOpen:false,
         title : "Booking Ticket",
-        width : 900,
-		height: 680,
+        width : 500,
+		height: 300,
 		buttons : {
-			"print" : function() { $('.voucher_body').printElement({ overrideElementCSS: false, printTitle: "booking Ticket"});}, 
-			"confirm" : function () {$(this).dialog('close');}
+			"confirm" : function () {jQuery(this).dialog('close'); return true; },
+			"cancel" : function () {jQuery(this).dialog('close'); return false; }
 		}
     }); 
     $('.pdfvoc').click (function (data) { 
@@ -126,12 +115,40 @@ $(document).ready(function(){
         	  }
     	});  
     	
-    }); 
-    $('.viewvoc').click(function () { 
-		$.get("<?php echo $geturl;?>", {seq: $(this).val()})
-		 .done(function (data) {   
-			 $('#ovsprint').html(data);
-			 $('#ovsprint').dialog('open');
+    });  
+    $('.openvoc').click(function () {  
+        var btn = $(this);  
+        var cmd = btn.text();   
+        var seqno = btn.val();
+        var mode = "y"; 
+        var r = false;
+        if(cmd == 'to open') 
+        { 
+         	mode="y"; 
+        } else {   
+            //confirmRet = jQuery('#ovsprint').dialog('open');   
+            //alert(confirmRet); 
+            r = confirm('Do you want to rollback this voucher? \r\nSystem will send cancel email to organized');  
+            if(r === false) { return; } 
+            mode = 'n';
+        }   
+		$.post("<?php echo $openurl;?>", {seq: seqno, cmd: mode})
+		 .done(function (data) {      
+			 if(data)
+			 {  
+				 if(data== "y") 
+				 { 
+				  	btn.text("to close");  
+				  	jQuery('#'+seqno+'status').text('OPENED'); 
+				  	btn.parents('tr').removeClass('vocclose');
+				  	btn.parents('tr').addClass('vocopen');
+				 } else {
+					 btn.text("to open"); 
+				  	jQuery('#'+seqno+'status').text('CLOSED');
+				  	btn.parents('tr').removeClass('vocopen');
+				  	btn.parents('tr').addClass('vocclose');
+			     } 
+			 }
 		});
     });
 });
