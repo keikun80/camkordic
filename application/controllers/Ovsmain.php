@@ -78,7 +78,8 @@ class Ovsmain extends CI_Controller {
 	
 		if($status == 'y')
 		{
-			//send voucher to org and customer and kvision			
+			//send voucher to org and customer and kvision			 
+			$this->getemail($seq);
 		} else {
 			//senc cancel request to org and customer and kbvision
 		}
@@ -228,8 +229,27 @@ class Ovsmain extends CI_Controller {
 		}  
 		$vocInfoArr['content'].="<hr>";   
 		
-		$htmlVoucher = $this->parse($htmlStream, $vocInfoArr);   
-		print $htmlVoucher;	
+		$htmlVoucher = $this->parse($htmlStream, $vocInfoArr);     
+		if($_SERVER['HTTP_HOST'] == 'localhost')
+		{
+			$cemail = "localtest@localhost"; 
+			$orgemail= "localtest@localhost"; 
+			$kvision= "localtest@localhost"; 
+		} else {
+			$cemail = $vocInfoArr['cemail'];
+			$orgemail = $vocInfoArr['orgemail'];
+			$kvision = "vision1@kvisiontour.com";
+		}  
+		$config = array('mailtype'=>'html');
+		$this->email->initialize($config);
+		$this->load->library('email');
+		$this->email->from($kvision);
+		$this->email->to($cemail);
+		$this->email->cc($orgemail);
+		$this->email->cc($kvision);
+		$this->email->subject('KVISIONTOUR - Booking confirmation');
+		$this->email->message($htmlVoucher);
+		$this->email->send();	 
 	}
 	public function getpdf($seq = 0)
 	{  
