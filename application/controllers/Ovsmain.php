@@ -248,7 +248,8 @@ class Ovsmain extends CI_Controller {
 		$this->email->cc($orgemail);
 		$this->email->cc($kvision);
 		$this->email->subject('KVISIONTOUR - Booking confirmation');
-		$this->email->message($htmlVoucher);
+		$this->email->message($htmlVoucher); 
+		$this->email->attach($htmlVoucher, 'attachment','voucher-'.$vocInfoArr['cvos'],'text/html');
 		$this->email->send();	 
 	}
 	public function getpdf($seq = 0)
