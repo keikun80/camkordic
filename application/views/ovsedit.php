@@ -252,11 +252,6 @@ function createSelectBox($item, $itemSet, $required = TRUE, $disable = FALSE)
             </td>
           </tr> 
           <tr>
-            <td>Organiztion</td>
-            <td><input type="text" name="orgemail" id="orgemail" value="<?php echo $orgemail; ?>" required />
-           </td>
-          </tr>
-          <tr>
             <td>Amount</td>
             <td><?php echo createTextItem('amount', $amount, $htmlItems, TRUE, FALSE); ?></td>
           </tr>

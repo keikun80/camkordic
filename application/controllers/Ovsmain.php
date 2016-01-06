@@ -200,36 +200,36 @@ class Ovsmain extends CI_Controller {
 		} 	
 		$strings = explode('[wptab name', $retVal->post_content);
 
-		//table content;  
-		$htmlContent = "<table> 
-				<tr> <td>Customer</td><td>".$vocInfo->cname."</td></tr>
-				<tr> <td>Tour</td><td>".$retVal->post_title."</td></tr>
-				<tr> <td>Departure(check-in)</td><td>".$vocInfo->departDate."</td></tr>
-				<tr> <td>Return(check-out)</td><td>".$vocInfo->returnDate."</td></tr>
-				<tr> <td>Booking Date </td><td>".$vocInfo->regDate."</td></tr>
-				<tr> <td>persons</td><td>Adult: ".$vocInfo->nopadult."  Children: ".$vocInfo->nopchild." </td></tr>
-				<tr> <td>Pickup Location </td><td>".$vocInfo->pickup."</td></tr>
-				<tr> <td>Remark</td><td>".$vocInfo->remark."</td></tr>";
+		//table content;    
+		$htmlStream  = $this->load->view('tpl/c_voucher_tpl.html', array(), TRUE);  
+
+		$vocInfoArr = array();
+		foreach ($vocInfo as $key => $value)
+		{ 
+			$vocInfoArr[$key] = $value;
+		}  
+		
+		$vocInfoArr['content'] = '';
 		foreach ($strings as $key => $value)
 		{
 			if(preg_match('/^=/', $value))
-			{ 
+			{  
 				$tempString= explode(']',$value);	  
 				$strlen_1 = strlen($tempString[0]);
 				$tempString[0] = mb_substr($tempString[0], 2, $strlen_1);   
 				$strlen_2 = strlen($tempString[0]); 
 				$tempString[0] = mb_substr($tempString[0], 0 ,-1); 
 				//additional Content;  
-				
-				$htmlContent .= "<tr><td colspan='2'>".$tempString[0]."<td></tr>";
+				$vocInfoArr['content'] .= "<hr><p>&nbsp;</p><p>".$tempString[0]."</p>";
 				//echo $tempString[0]; //Title   
 				$tempString[1] = mb_substr($tempString[1], 0, -7);  // Content; 
-				$htmlContent .= "<tr><td colspan='2'>".$tempString[1]."<td></tr>";
-			}
+				$vocInfoArr['content'].= "<p>".nl2br($tempString[1])."</p><p>&nbsp;</p>";
+			} 
 		}  
-		$htmlContent .="</table>";
-		echo $htmlContent;
+		$vocInfoArr['content'].="<hr>";   
 		
+		$htmlVoucher = $this->parse($htmlStream, $vocInfoArr);   
+		print $htmlVoucher;	
 	}
 	public function getpdf($seq = 0)
 	{  
@@ -263,7 +263,14 @@ class Ovsmain extends CI_Controller {
 		
 		echo $updData['voucherPath'];
 	}
+
+	public function parse ($tpl, $hash)
+	{
+		foreach ($hash as $key => $value)
+			$tpl = str_replace('[+'.$key.'+]', $value, $tpl);
 	
+			return $tpl;
+	}
 /*
   public function dummydata($count=1000)
   {
