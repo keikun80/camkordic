@@ -252,7 +252,7 @@ class Ovsmain extends CI_Controller {
 		} else {
 			$cemail = $vocInfoArr['cemail'];
 			$orgemail = $vocInfoArr['orgemail'];
-			$kvision = "vision1@kvisiontour.com";
+			$kvision = "kvision1@kvisiontours.com";
 		}  
 		$config = array('mailtype'=>'html');
 		$this->email->initialize($config);
