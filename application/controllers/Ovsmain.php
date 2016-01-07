@@ -50,12 +50,14 @@ class Ovsmain extends CI_Controller {
 	}
 
 	private function _getovsvoucher($seq = 0)
-	{ 
+	{  
+		$this->db->reset_query(); 
+		
 		$retVal = false;
 		if($seq > 0) 
 		{
-			$condition= array('seq'=> $seq);
-			$retVal = $this->db->get_where('wp_tb_voucher_list', $condition); 
+			$this->db->where('seq', $seq);
+			$retVal = $this->db->get('wp_tb_voucher_list');
 		} 
 		return $retVal;
 	}  
@@ -179,13 +181,26 @@ class Ovsmain extends CI_Controller {
     		$this->load->model('ovsmodel');
     		$updVars['cvos'] = $this->ovsmodel->get_cvos_id($updVars['ttype'], $updVars['regDate']);
 			$this->db->insert('wp_tb_voucher_list', $updVars);
-		}
+		} 
+		
+		if($seq > 0)
+		{
+			//$resObj = $this->db->get_where('wp_tb_voucher_list', array('seq'=> $seq));   
+			$aSeq = $seq;
+		} else {
+			$resObj = $this->db->get_where('wp_tb_voucher_list', array('cvos'=>$updVars['cvos']));   
+			$aSeq = $resObj->row()->seq;
+		} 
+		if($updVars['isOpen'] == 'y')
+		{  
+			$this->getemail($aSeq);
+		}  
 		if($refer == '') {
 			$listUrl = $this->config->item('base_url').'index.php/'.get_class($this).'/ovslist';
 			header('location:'.$listUrl);
 		} else {
 			header('location:'.$refer);
-		}
+		} 
 	} 
 
 	public function getemail($seq = 0)
@@ -196,12 +211,11 @@ class Ovsmain extends CI_Controller {
 		$retVal = 0;   
 		if($seq > 0)
 		{
-			$vocInfo = $this->_getovsvoucher($seq)->row();  
+			$vocInfo = $this->_getovsvoucher($seq)->row();
 			$retVal = $this->ovsmodel->get_tour_post($vocInfo->trcode);
-		} 	
-		$strings = explode('[wptab name', $retVal->post_content);
-
-		//table content;    
+		} 
+		
+		$strings = explode('[wptab name', $retVal->post_content); 
 		$htmlStream  = $this->load->view('tpl/c_voucher_tpl.html', array(), TRUE);  
 
 		$vocInfoArr = array();
@@ -209,7 +223,7 @@ class Ovsmain extends CI_Controller {
 		{ 
 			$vocInfoArr[$key] = $value;
 		}  
-		
+		$vocInfoArr['trname'] = $retVal->post_title;	
 		$vocInfoArr['content'] = '';
 		foreach ($strings as $key => $value)
 		{

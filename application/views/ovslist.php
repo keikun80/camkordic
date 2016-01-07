@@ -27,7 +27,7 @@
               <td>PAID</td>
               <td>STATUS</td>
               <td>VOUCHER</td>
-              <td>OPEN CMD</td>
+              <!-- <td>OPEN CMD</td> -->
           </tr>
           <?php
           foreach ($result->result() as $row)
@@ -53,7 +53,7 @@
           	  } else {
               	echo '<td><a href="#" class="printpdf" value="'.$row->seq.'">CREATE</a></td>';
           	  }	
-              echo '<td><button class="openvoc" type="button" value="'.$row->seq.'">'. ($row->isOpen == 'y' ? 'to close' : 'to open').'</button></td>';
+              //echo '<td><button class="openvoc" type="button" value="'.$row->seq.'">'. ($row->isOpen == 'y' ? 'to close' : 'to open').'</button></td>';
             echo '</tr>';
           }
           ?>
@@ -108,7 +108,7 @@ $(document).ready(function(){
     	$.get ("<?php echo $pdfurl; ?>", {seq : v }) 
     	  .done(function (data) {     
         	  if(data != '') {
-          		c.text('PDF'); 
+          		c.text('VIEW'); 
           		c.removeClass('printpdf'); 
           		c.addClass('pdfvoc');  
           		c.attr('href' , data);
