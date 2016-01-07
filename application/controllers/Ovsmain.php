@@ -50,13 +50,13 @@ class Ovsmain extends CI_Controller {
 		$this->db->select ('count(*) as row');  
 		$this->db->where($condition);
 		$resObj = $this->db->get('wp_tb_voucher_list');  
-		$pageArticleLimit = 1;
+		$pageArticleLimit = 20;
 		$config['base_url'] = $this->config->item('base_url').'index.php/'.get_class($this).'/ovslist';   
 		if (count($_GET) > 0) $config['suffix'] = '?' . http_build_query($_GET, '', "&");
 		//$config['total_rows']= $this->db->count_all('wp_tb_voucher_list'); 
 		$config['total_rows']= $resObj->row()->row;
 		$config['per_page'] = $pageArticleLimit;
-		$config['num_links'] = 2;
+		$config['num_links'] = 5;
 		$config['first_url'] = $config['base_url'].'?'.http_build_query($_GET);
 		$config['full_tag_open'] = '<nav><ul class="pagination">';
 		$config['full_tag_close'] = '</ul></nav>';  
