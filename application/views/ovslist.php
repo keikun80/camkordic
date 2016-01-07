@@ -4,15 +4,15 @@
     <div class="panel-heading">Open Voucher Management</div>
     <div class="panel-body">
       <div class="wall">
-        <form>
+        <form action="<?php echo $listurl;?>" method="get" >
           <label for="cvos" class="sr-only">Booking Date :</label>
           Booking Date :
-            <input type="text" name="fromdt" id="fromdt" /> ~ <input type="text" name="todt" id="todt" />
+            <input type="text" name="sw_fromdt" id="sw_fromdt" /> ~ <input type="text" name="sw_todt" id="sw_todt" />
           VOUCHER NO :
-          <input type="text" name="keyword" id="keyword" />
+          <input type="text" name="sw_vno" id="sw_vno" />
           CUSTOMER :
-          <input type="text" name="s_cname" id="s_cname" /> 
-          <button id="subbtn" name="subbtn" type"button">SEARCH</button>
+          <input type="text" name="sw_cname" id="sw_cname" /> 
+          <button id="subbtn" name="subbtn" type="submit">SEARCH</button>
         </form> 
       </div>
         <table class="table">
@@ -65,21 +65,30 @@
 <script>
 $(document).ready(function(){ 
 
-	$('.glyphicon').hide(); 
-    $('#fromdt').datepicker({
+	$('#subbtn').click(function () { 
+		var fromdt = $('#sw_fromdt').val();
+		var todt = $('#sw_todt').val();
+		var vno = $('#sw_vno').val();
+		var cname = $('#sw_cname').val(); 
+		$.get
+	}); 
+	
+	$('.glyphicon').hide();  
+	
+    $('#sw_fromdt').datepicker({
         defaultDate:"+1W",
         changeMonths: true,
         numberOfMonths:3 ,
-        dateFormat: "d M, y",
+        dateFormat: "yy-mm-dd",
         onClose :function (selectedDate){
           $("#todt").datepicker("option","minDate", selectedDate);
         }
     });
-    $('#todt').datepicker({
+    $('#sw_todt').datepicker({
         defaultDate:"+1W",
         changeMonths: true,
         numberOfMonths:3 ,
-        dateFormat: "d M, y",
+        dateFormat: "yy-mm-dd",
         onClose :function (selectedDate){
           $("#fromdt").datepicker("option","maxDate", selectedDate);
         }

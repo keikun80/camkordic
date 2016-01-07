@@ -14,10 +14,47 @@ class Ovsmain extends CI_Controller {
 	}
 
 	public function ovslist($offset=0)
-	{
-		$pageArticleLimit = 20;
-		$config['base_url'] = $this->config->item('base_url').'index.php/'.get_class($this).'/ovslist';
-		$config['total_rows']= $this->db->count_all('wp_tb_voucher_list', array('isDel'=>'n'));
+	{    
+		
+		$vno = $this->input->get('sw_vno');
+		$cname = $this->input->get('sw_cname');
+		$fromdt = $this->input->get('sw_fromdt');
+		$todt = $this->input->get('sw_todt');
+	
+		$condition = ''; 
+		if($vno != '') { 
+			$condition .= "cvos like '%".strtoupper($vno)."%'";
+		}	
+		if($cname != '') { 
+			if($condition != '') { $condition .= ' and '; } //keep the front and last space 
+			$condition .= "cname like '%".$cname."%'";
+		}	 
+		
+		if($fromdt != '' && $todt != '') {  
+			if($condition != '') { $condition .= ' and '; } //keep the front and last space  
+			$condition .= "regDate >= '".$fromdt."' and regDate <='".$todt."'"; 
+		}   
+		if($fromdt != '' && $todt == '') {
+			if($condition != '') { $condition .= ' and '; } //keep the front and last space  
+			$condition .= " regDate >= '".$fromdt."'"; 
+		} 
+		if($fromdt == '' && $todt != '') {
+			if($condition != '') { $condition .= ' and '; } //keep the front and last space  
+			$condition .= " regDate <='".$todt."'"; 
+		} 
+			
+		if($condition != '') { $condition .= ' and '; } //keep the front and last space  
+		$condition .= " isDel='n'";	 
+		
+		/* pagination */
+		$this->db->select ('count(*) as row');  
+		$this->db->where($condition);
+		$resObj = $this->db->get('wp_tb_voucher_list');  
+		$pageArticleLimit = 1;
+		$config['base_url'] = $this->config->item('base_url').'index.php/'.get_class($this).'/ovslist';   
+		if (count($_GET) > 0) $config['suffix'] = '?' . http_build_query($_GET, '', "&");
+		//$config['total_rows']= $this->db->count_all('wp_tb_voucher_list'); 
+		$config['total_rows']= $resObj->row()->row;
 		$config['per_page'] = $pageArticleLimit;
 		$config['num_links'] = 5;
 		$config['full_tag_open'] = '<nav><ul class="pagination">';
@@ -36,10 +73,9 @@ class Ovsmain extends CI_Controller {
 		$config['next_tag_close'] = '</li>';
 
 		$this->pagination->initialize($config);
-
-		$condition = array('isDel'=>'n' );
 		$this->load->model('ovsmodel');
-		$result = $this->ovsmodel->ovslist('wp_tb_voucher_list', $pageArticleLimit, $offset, $condition, 'seq');
+		$result = $this->ovsmodel->ovslist('wp_tb_voucher_list', $pageArticleLimit, $offset, $condition, 'seq');   
+		echo $this->db->last_query();
 		$vars = array ('result'=> $result,
 						'listurl' => $_SERVER['PHP_SELF'],
 						'linkurl' => $this->config->item('base_url').'index.php/'.get_class($this).'/ovsedit',
@@ -47,8 +83,8 @@ class Ovsmain extends CI_Controller {
 				        'openurl' => $this->config->item('base_url').'index.php/'.get_class($this).'/ovsopen');
 		$this->layout->setTitle("OVS MANAGEMENT - LIST");
 		$this->layout->view('ovslist',$vars);
-	}
-
+	} 
+	
 	private function _getovsvoucher($seq = 0)
 	{  
 		$this->db->reset_query(); 
@@ -305,43 +341,11 @@ class Ovsmain extends CI_Controller {
 			$tpl = str_replace('[+'.$key.'+]', $value, $tpl);
 	
 			return $tpl;
+	} 
+	
+	public function search()
+	{
+		
 	}
-/*
-  public function dummydata($count=1000)
-  {
-
-    for($i=0; $i<$count; $i++)
-    {
-$data = array('cname'=>'test#',
-            'cemail'=> 'test#@gmail.com',
-            'cmobile' => '123#098764',
-            'trcode' => '###',
-            'orgname' => '###',
-            'amount' => '########',
-            'nopad' => '##',
-            'nopch' =>'#',
-            'departDate' => '2015-10-31',
-            'returnDate'=> '2015-11-01',
-            'paymentDate' => '2015-10-29',
-            'openDate' => '2015-10-30',
-            'regDate'=> '2015-10-29',
-            'isPaid' => 'y',
-            'isOpen' =>'n',
-            'isDel' => 'n',
-          );
-
-        $data['cname'] = preg_replace('/#/', $i, $data['cusName']);
-        $data['cemail'] = preg_replace('/#/', $i, $data['cusEmail']);
-        $data['cmobile'] = preg_replace('/#/', $i, $data['cusMobile']);
-        $data['trcode'] = preg_replace('/###/', rand(100,200), $data['torKey']);
-        $data['orgname'] = preg_replace('/###/', rand(100,200), $data['orgKey']);
-        $data['amount'] = preg_replace('/########/', rand(10000000,20000000), $data['amount']);
-        $data['nopad'] = preg_replace('/##/', rand(1,99), $data['numofpeo']);
-        $data['cvos'] = preg_replace('/#/', '2015'.date('m').rand(1,9999), $data['cvos']);
-      print_r($data);
-      $this->db->insert('wp_tb_voucher_list', $data);
-    }
-  } 
-  */
 } 
 ?>

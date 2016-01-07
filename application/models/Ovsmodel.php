@@ -50,7 +50,7 @@ class Ovsmodel extends CI_Model {
 		else { $this->db->limit($limit); }
 		
 		$this->db->order_by($orderKey, 'DESC');
-		
+	
 		return $this->db->get($table);
 	}
 
