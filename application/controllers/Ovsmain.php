@@ -56,9 +56,10 @@ class Ovsmain extends CI_Controller {
 		//$config['total_rows']= $this->db->count_all('wp_tb_voucher_list'); 
 		$config['total_rows']= $resObj->row()->row;
 		$config['per_page'] = $pageArticleLimit;
-		$config['num_links'] = 5;
+		$config['num_links'] = 2;
+		$config['first_url'] = $config['base_url'].'?'.http_build_query($_GET);
 		$config['full_tag_open'] = '<nav><ul class="pagination">';
-		$config['full_tag_close'] = '</ul></nav>';
+		$config['full_tag_close'] = '</ul></nav>';  
 		$config['first_tag_open'] ='<li>';
 		$config['first_tag_close'] ='</li>';
 		$config['cur_tag_open'] = '<li class="active"><a href="#">';
@@ -75,7 +76,6 @@ class Ovsmain extends CI_Controller {
 		$this->pagination->initialize($config);
 		$this->load->model('ovsmodel');
 		$result = $this->ovsmodel->ovslist('wp_tb_voucher_list', $pageArticleLimit, $offset, $condition, 'seq');   
-		echo $this->db->last_query();
 		$vars = array ('result'=> $result,
 						'listurl' => $_SERVER['PHP_SELF'],
 						'linkurl' => $this->config->item('base_url').'index.php/'.get_class($this).'/ovsedit',
