@@ -79,7 +79,7 @@ class Ovsmain extends CI_Controller {
 		$vars = array ('result'=> $result,
 						'listurl' => $_SERVER['PHP_SELF'],
 						'linkurl' => $this->config->item('base_url').'index.php/'.get_class($this).'/ovsedit',
-						'pdfurl' => $this->config->item('base_url').'index.php/'.get_class($this).'/getpdf',
+						'pdfurl' => $this->config->item('base_url').'index.php/'.get_class($this).'/getemailpdf',
 				        'openurl' => $this->config->item('base_url').'index.php/'.get_class($this).'/ovsopen');
 		$this->layout->setTitle("OVS MANAGEMENT - LIST");
 		$this->layout->view('ovslist',$vars);
@@ -177,7 +177,8 @@ class Ovsmain extends CI_Controller {
 		$returnDate = $this->input->post('returnDate');
 		$regDate = $this->input->post('regDate');
 		$paymentDate = $this->input->post('paymentDate'); 
-		$pickup = $this->input->post('pickup');
+		$pickup = $this->input->post('pickup'); 
+		$dropsite = $this->input->post('dropsite');
 		$nopadult = $this->input->post('nopadult');
 		$nopchild = $this->input->post('nopchild');
 		$openDate = $this->input->post('openDate'); 
@@ -203,7 +204,8 @@ class Ovsmain extends CI_Controller {
 					    'ttype'=>$ttype,
 						'amount'=> $amount,
 						'totamount'=> $totamount,
-						'pickup' => $pickup,
+						'pickup' => $pickup, 
+					    'dropsite'=> $dropsite,
 						'trcode' => $trcode, 
 						'orgemail' => $orgemail, 
 						'isPaid' => $isPaid, 
@@ -229,7 +231,7 @@ class Ovsmain extends CI_Controller {
 		} 
 		if($updVars['isOpen'] == 'y')
 		{  
-			$this->getemail($aSeq);
+			$this->getemailpdf($aSeq, 'mail');
 		}  
 		if($refer == '') {
 			$listUrl = $this->config->item('base_url').'index.php/'.get_class($this).'/ovslist';
@@ -239,17 +241,21 @@ class Ovsmain extends CI_Controller {
 		} 
 	} 
 
-	public function getemail($seq = 0)
+	public function getemailpdf($seq, $mode)
 	{ 
-		$this->load->model('ovsmodel');
-		if(!$seq) $seq = $this->input->get('seq'); 
-		
+		$this->load->model('ovsmodel'); 
+		//$seq = $this->input->get('mode'); 
+		if(!$seq)  { $seq = $this->input->get('seq');}
+		if(!$mode) { $mode = $this->input->get('mode');}
+	
 		$retVal = 0;   
 		if($seq > 0)
 		{
 			$vocInfo = $this->_getovsvoucher($seq)->row();
 			$retVal = $this->ovsmodel->get_tour_post($vocInfo->trcode);
-		} 
+		} else {
+			exit("no seq");
+		}
 		
 		$strings = explode('[wptab name', $retVal->post_content); 
 		$htmlStream  = $this->load->view('tpl/c_voucher_tpl.html', array(), TRUE);  
@@ -289,20 +295,37 @@ class Ovsmain extends CI_Controller {
 			$cemail = $vocInfoArr['cemail'];
 			$orgemail = $vocInfoArr['orgemail'];
 			$kvision = "kvision1@kvisiontours.com";
-		}  
-		$config = array('mailtype'=>'html');
-		$this->email->initialize($config);
-		$this->load->library('email');
-		$this->email->from($kvision);
-		$this->email->to($cemail);
-		$this->email->cc(array($orgemail, $kvision));
-		$this->email->subject('KVISIONTOUR - Booking confirmation');
-		$this->email->message($htmlVoucher); 
-		$this->email->attach($htmlVoucher, 'attachment','voucher-'.$vocInfoArr['cvos'],'text/html');
-		$this->email->send();	 
+		}   
+	
+		switch ($mode)
+		{ 
+			case 'pdf': 
+				$filePath = getcwd().'/files/'.$vocInfoArr['cvos'].'.pdf';   
+				$this->load->helper('dompdf','files');   
+				$output = pdf_creator($htmlVoucher,$filePath ,false); 
+				file_put_contents($filePath, $output);  
+				$updData['voucherPath'] = $this->config->item('base_url').'files/'.basename($filePath);  
+				$this->db->where('seq', $seq);
+				$this->db->update('wp_tb_voucher_list',$updData);	
+				echo $updData['voucherPath'];
+				break;	
+			case 'mail': 
+			case 'default':
+				$config = array('mailtype'=>'html');
+				$this->email->initialize($config);
+				$this->load->library('email');
+				$this->email->from($kvision);
+				$this->email->to($cemail);
+				$this->email->cc(array($orgemail, $kvision));
+				$this->email->subject('KVISIONTOUR - Booking confirmation');
+				$this->email->message($htmlVoucher); 
+				$this->email->attach($htmlVoucher, 'attachment','voucher-'.$vocInfoArr['cvos'],'text/html');
+				$this->email->send();	  
+		}
 	}
 	public function getpdf($seq = 0)
-	{  
+	{   
+		/*
 		if(!$seq)
 			$seq = $this->input->get('seq');
 		
@@ -331,7 +354,8 @@ class Ovsmain extends CI_Controller {
 		$this->db->where('seq', $seq);
 		$this->db->update('wp_tb_voucher_list',$updData);	 
 		
-		echo $updData['voucherPath'];
+		echo $updData['voucherPath']; 
+		*/
 	}
 
 	public function parse ($tpl, $hash)
