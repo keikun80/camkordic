@@ -16,7 +16,8 @@ $htmlItems = array ('refer' => 'hidden|refer'
                    ,'paymentDate' =>'text|paymentDate'
                    ,'regDate' =>'text|regDate'
                    ,'openDate' => 'text|openDate' 
-				   ,'pickup' => 'text|pickup'
+				   ,'pickup' => 'text|pickup' 
+		           ,'dropsite' => 'text|dropsite'
                    ,'trcode' => 'text|trcode' 
                    ,'orgemail' => 'text|orgemail'
                    ,'amount' => 'text|amount' 
@@ -40,7 +41,8 @@ $strRegDate= $strDepartDate;
 $strOpenDate = $strDepartDate;
 
 $ttype = NULL;
-$pickup = NULL;
+$pickup = NULL; 
+$dropsite = NULL;
 $trcode = NULL;
 $orgemail = NULL;
 $amount = NULL; 
@@ -84,6 +86,7 @@ if(isset($result))
 	
 	$ttype = $result->row()->ttype;
 	$pickup = $result->row()->pickup;
+	$dropsite = $result->row()->dropsite;
 	$trcode = $result->row()->trcode;
 	$orgemail = $result->row()->orgemail;
 	$amount = $result->row()->amount;
@@ -247,8 +250,13 @@ function createSelectBox($item, $itemSet, $required = TRUE, $disable = FALSE)
           </tr>
           <tr>
             <tr>
-            <td>Pickup Location</td>
+            <td>Pickup site</td>
             <td><input type="text" name="pickup" id="pickup" value="<?php echo $pickup; ?>" required /> 
+            </td>
+          </tr> 
+            <tr>
+            <td>Drop site</td>
+            <td><input type="text" name="dropsite" id="dropsite" value="<?php echo $dropsite; ?>" required /> 
             </td>
           </tr> 
           <tr>

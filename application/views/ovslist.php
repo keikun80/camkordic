@@ -113,8 +113,8 @@ $(document).ready(function(){
        	c = $(this);  
         v = c.attr('value');   
        	c.html('<span class="glyphicon glyphicon-repeat" aria-hidden="true">');
-       	
-    	$.get ("<?php echo $pdfurl; ?>", {seq : v }) 
+       	u = "<?php echo $pdfurl?>/"+v+"/pdf";
+    	$.get (u) 
     	  .done(function (data) {     
         	  if(data != '') {
           		c.text('VIEW'); 
