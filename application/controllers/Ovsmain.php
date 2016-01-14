@@ -297,16 +297,25 @@ class Ovsmain extends CI_Controller {
 			$kvision = "kvision1@kvisiontours.com";
 		}   
 	
+		$filePath = getcwd().'/files/'.$vocInfoArr['cvos'].'.pdf';   
+		$this->load->helper('dompdf','files');   
+		$output = pdf_creator($htmlVoucher,$filePath ,false); 
+		file_put_contents($filePath, $output);  
+		$updData['voucherPath'] = $this->config->item('base_url').'files/'.basename($filePath);  
+		$this->db->where('seq', $seq);
+		$this->db->update('wp_tb_voucher_list',$updData);	 
+		
 		switch ($mode)
 		{ 
 			case 'pdf': 
-				$filePath = getcwd().'/files/'.$vocInfoArr['cvos'].'.pdf';   
+			 /* $filePath = getcwd().'/files/'.$vocInfoArr['cvos'].'.pdf';   
 				$this->load->helper('dompdf','files');   
 				$output = pdf_creator($htmlVoucher,$filePath ,false); 
 				file_put_contents($filePath, $output);  
 				$updData['voucherPath'] = $this->config->item('base_url').'files/'.basename($filePath);  
 				$this->db->where('seq', $seq);
-				$this->db->update('wp_tb_voucher_list',$updData);	
+				$this->db->update('wp_tb_voucher_list',$updData);	 
+			*/
 				echo $updData['voucherPath'];
 				break;	
 			case 'mail': 
@@ -319,7 +328,8 @@ class Ovsmain extends CI_Controller {
 				$this->email->cc(array($orgemail, $kvision));
 				$this->email->subject('KVISIONTOUR - Booking confirmation');
 				$this->email->message($htmlVoucher); 
-				$this->email->attach($htmlVoucher, 'attachment','voucher-'.$vocInfoArr['cvos'],'text/html');
+			//	$this->email->attach($htmlVoucher, 'attachment','voucher-'.$vocInfoArr['cvos'],'text/html');
+				$this->email->attach($updData['voucherPath']);
 				$this->email->send();	  
 		}
 	}
