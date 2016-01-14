@@ -35,7 +35,7 @@
       <!-- active class can change background color -->
         <li><a href="<?php echo base_url();?>index.php/Ovsmain">Voucher<span class="sr-only">(current)</span></a></li>
         <li><a href="<?php echo base_url();?>index.php/Ovsmain/ovsedit">New<span class="sr-only"></span></a></li>
-        <li><a href="<?php echo $menu['userPath']; ?>">Usesr</a></li>
+        <li><a href="<?php echo $menu['userPath']; ?>">User</a></li>
         <li><a href="#">Tour</a></li>
         <li><a href="#">Organization</a></li>
         <li><a href="<?php echo $menu['logoutPath']; ?>" name="logout">Logout</a></li>
