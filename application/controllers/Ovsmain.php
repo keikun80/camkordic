@@ -262,11 +262,16 @@ class Ovsmain extends CI_Controller {
 
 		$vocInfoArr = array();
 		foreach ($vocInfo as $key => $value)
-		{ 
-			$vocInfoArr[$key] = $value;
+		{
+			if(preg_match('/Date/', $key))
+			{ 
+				$vocInfoArr[$key] = date('d-m-Y', strtotime($value));
+			} else {
+				$vocInfoArr[$key] = $value;
+			}
 		}  
 		$vocInfoArr['trname'] = $retVal->post_title;	
-		$vocInfoArr['content'] = '';
+		$vocInfoArr['content'] = ''; 
 		foreach ($strings as $key => $value)
 		{
 			if(preg_match('/^=/', $value))
